@@ -34,17 +34,12 @@ export default async function ProfilePage() {
             </div>
 
             {/* Logout Section */}
-            {/* <div>
-              <form action={logout}>
-                <button
-                  type="submit"
-                  className="w-full px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
-                >
+            <div>
+              <a href='/auth/logout' className="w-full px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-center block">
                   Logout
-                </button>
-                </form>
-              </div> */}
+              </a>
             </div>
+          </div>
         </div>
       </div>
     </div>

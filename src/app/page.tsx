@@ -1,7 +1,7 @@
+import { auth0 } from '@/app/lib/auth/auth0';
 import { redirect } from 'next/navigation';
-import { verifySession } from '@/app/lib/auth/session';
 
 export default async function Home() {
-  const session = await verifySession();
-  redirect(session ? '/funds/' : '/login/');
+  const session = await auth0.getSession();
+  redirect(session ? '/funds' : '/auth/login');
 }

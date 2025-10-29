@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@auth0/nextjs-auth0": "^4.11.0",
     "jose": "^6.1.0",
     "next": "16.0.0",
     "react": "19.2.0",
@@ -23,5 +24,10 @@
     "eslint-config-next": "16.0.0",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "overrides": {
+    "@auth0/nextjs-auth0": {
+      "next": "16.0.0"
+    }
   }
 }

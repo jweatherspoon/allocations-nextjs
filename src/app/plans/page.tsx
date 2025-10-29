@@ -1,11 +1,8 @@
-import { verifySession } from '@/app/lib/auth/session';
 import { getAllPlans } from '@/app/lib/plans/plans';
 import { PlanDetailsCard } from '@/app/plans/_components/plan-details-card';
 import Link from 'next/link';
 
 export default async function PlansPage() {
-  await verifySession();
-
   const plans = await getAllPlans();
 
   return (

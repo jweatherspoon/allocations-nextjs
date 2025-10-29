@@ -17,6 +17,21 @@ export async function getActiveFunds(): Promise<FundDetails[]> {
   return activeFunds.sort((a, b) => (b.rank || 0) - (a.rank || 0));
 }
 
+export async function getFundDetails(
+  fundId: string
+): Promise<FundDetails | null> {
+  const session = await verifySession();
+  if (!session) {
+    throw new Error('Unauthorized');
+  }
+
+  // Fetch fund details from the database or any other source
+  const allFunds = await getTestFunds(); // Replace with actual data fetching logic
+  const fundDetails = allFunds.find((fund) => fund.id === fundId) || null;
+
+  return fundDetails;
+}
+
 async function getTestFunds(): Promise<FundDetails[]> {
   const testData = await fetchTestData();
 

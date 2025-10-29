@@ -1,6 +1,6 @@
 import { TransactionDetails, TransactionType } from '@/app/lib/models/funds/transaction';
 
-export interface TransactionCardProps {
+export interface FundTransactionCardProps {
   transaction: TransactionDetails;
 }
 
@@ -27,7 +27,7 @@ function getTransactionColor(type: TransactionType) {
   }
 }
 
-export default function TransactionCard({ transaction }: TransactionCardProps) {
+export default function FundTransactionCard({ transaction }: FundTransactionCardProps) {
   const colors = getTransactionColor(transaction.type);
 
   return (

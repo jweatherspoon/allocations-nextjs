@@ -1,7 +1,7 @@
 import { verifySession } from '@/app/lib/auth/session';
 import { getFundDetails } from '@/app/lib/funds/funds';
 import { notFound } from 'next/navigation';
-import TransactionCard from '@/app/funds/_components/transaction-card';
+import FundTransactionCard from '@/app/funds/_components/fund-transaction-card';
 
 export default async function FundDetailsPage({
   params,
@@ -91,7 +91,7 @@ export default async function FundDetailsPage({
           {fundDetails.transactions.length > 0 ? (
             <div className="space-y-3">
               {fundDetails.transactions.slice(0, 10).map((transaction) => (
-                <TransactionCard key={transaction.id} transaction={transaction} />
+                <FundTransactionCard key={transaction.id} transaction={transaction} />
               ))}
               {fundDetails.transactions.length > 10 && (
                 <div className="text-center pt-3">

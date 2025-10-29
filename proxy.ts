@@ -2,25 +2,30 @@ import { auth0 } from '@/app/lib/auth/auth0';
 import { NextRequest, NextResponse } from 'next/server';
 
 export default async function proxy(request: NextRequest) {
-  // const authRes = await auth0.middleware(request);
-  // console.log(auth0);
+  const authRes = await auth0.middleware(request); // Returns a NextResponse object
 
-  // if (request.nextUrl.pathname.startsWith('/auth')) {
-  //   return authRes;
-  // }
+  // Ensure your own middleware does not handle the `/auth` routes, auto-mounted and handled by the SDK
+  if (request.nextUrl.pathname.startsWith('/auth')) {
+    return authRes;
+  }
 
-  // const session = await auth0.getSession(); // <----  Do not pass the request and let the package handle getting the cookies
+  // Allow access to public routes without requiring a session
+  if (request.nextUrl.pathname === '/') {
+    return authRes;
+  }
 
-  // if (!session) {
-  //   // user is not authenticated, redirect to login page
-  //   return NextResponse.redirect(
-  //     new URL('/auth/login', request.nextUrl.origin)
-  //   );
-  // }
+  // Any route that gets to this point will be considered a protected route, and require the user to be logged-in to be able to access it
+  const { origin } = new URL(request.url);
+  const session = await auth0.getSession(request);
 
-  // // the headers from the auth middleware should always be returned
-  // return authRes;
-  return await auth0.middleware(request);
+  // If the user does not have a session, redirect to login
+  if (!session) {
+    return NextResponse.redirect(`${origin}/auth/login`);
+  }
+
+  // If a valid session exists, continue with the response from Auth0 middleware
+  // You can also add custom logic here...
+  return authRes;
 }
 
 export const config = {

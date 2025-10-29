@@ -1,16 +1,10 @@
 'use server';
 
 import { fetchTestData } from '@/app/lib/_test-data/test-data';
-import { verifySession } from '@/app/lib/auth/session';
 import { FundDetails } from '@/app/lib/models/funds/fund.model';
 import { TransactionDetails } from '@/app/lib/models/funds/transaction.model';
 
 export async function getActiveFunds(): Promise<FundDetails[]> {
-  const session = await verifySession();
-  if (!session) {
-    throw new Error('Unauthorized');
-  }
-
   // Fetch active funds from the database or any other source
   const activeFunds: FundDetails[] = await getTestFunds(); // Replace with actual data fetching logic
 
@@ -20,11 +14,6 @@ export async function getActiveFunds(): Promise<FundDetails[]> {
 export async function getFundDetailsV2(
   fundIds: string[]
 ): Promise<FundDetails[] | null> {
-  const session = await verifySession();
-  if (!session) {
-    throw new Error('Unauthorized');
-  }
-
   // Fetch fund details from the database or any other source
   const allFunds = await getTestFunds(); // Replace with actual data fetching logic
   const fundDetails = allFunds.filter((fund) => fundIds.includes(fund.id));
@@ -35,11 +24,6 @@ export async function getFundDetailsV2(
 export async function getFundDetails(
   fundId: string
 ): Promise<FundDetails | null> {
-  const session = await verifySession();
-  if (!session) {
-    throw new Error('Unauthorized');
-  }
-
   // Fetch fund details from the database or any other source
   const allFunds = await getTestFunds(); // Replace with actual data fetching logic
   const fundDetails = allFunds.find((fund) => fund.id === fundId) || null;

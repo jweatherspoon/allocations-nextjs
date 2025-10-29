@@ -1,12 +1,9 @@
-import { verifySession } from '@/app/lib/auth/session';
 import { getActiveFunds } from '@/app/lib/funds/funds';
 
 import FundCard from '@/app/funds/_components/fund-card';
 import Link from 'next/link';
 
 export default async function ListFundsPage() {
-  await verifySession();
-
   const activeFunds = await getActiveFunds();
 
   return (

@@ -1,9 +1,4 @@
-import { logout } from '@/app/lib/auth/auth';
-import { verifySession } from '@/app/lib/auth/session';
-
 export default async function ProfilePage() {
-  await verifySession();
-
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -39,7 +34,7 @@ export default async function ProfilePage() {
             </div>
 
             {/* Logout Section */}
-            <div>
+            {/* <div>
               <form action={logout}>
                 <button
                   type="submit"
@@ -48,7 +43,7 @@ export default async function ProfilePage() {
                   Logout
                 </button>
                 </form>
-              </div>
+              </div> */}
             </div>
         </div>
       </div>

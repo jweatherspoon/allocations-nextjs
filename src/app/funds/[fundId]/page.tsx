@@ -1,4 +1,3 @@
-import { verifySession } from '@/app/lib/auth/session';
 import { getFundDetails } from '@/app/lib/funds/funds';
 import { notFound } from 'next/navigation';
 import FundTransactionCard from '@/app/funds/_components/fund-transaction-card';
@@ -8,7 +7,6 @@ export default async function FundDetailsPage({
 }: {
   params: Promise<{ fundId: string }>;
 }) {
-  await verifySession();
   const { fundId } = await params;
   const fundDetails = await getFundDetails(fundId);
   if (!fundDetails) {

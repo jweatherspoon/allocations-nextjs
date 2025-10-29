@@ -1,4 +1,9 @@
+import { auth0 } from '@/app/lib/auth/auth0';
+
 export default async function ProfilePage() {
+  const session = await auth0.getSession();
+  console.log('User session:', session);
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -13,7 +18,38 @@ export default async function ProfilePage() {
             <div className="border-b pb-6">
               <h2 className="text-xl font-semibold text-gray-900 mb-4">Profile Information</h2>
               <div className="text-gray-600">
-              <p>Profile management coming soon.</p>
+              {session?.user && (
+                <div className="flex items-start gap-6">
+                  {session.user.picture && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={session.user.picture}
+                      alt={session.user.name || 'User'}
+                      className="w-20 h-20 rounded-full"
+                    />
+                  )}
+                  <div className="space-y-2">
+                    {session.user.name && (
+                      <div>
+                        <span className="font-semibold">Name: </span>
+                        <span>{session.user.name}</span>
+                      </div>
+                    )}
+                    {session.user.nickname && (
+                      <div>
+                        <span className="font-semibold">Nickname: </span>
+                        <span>{session.user.nickname}</span>
+                      </div>
+                    )}
+                    {session.user.email && (
+                      <div>
+                        <span className="font-semibold">Email: </span>
+                        <span>{session.user.email}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
               </div>
             </div>
 

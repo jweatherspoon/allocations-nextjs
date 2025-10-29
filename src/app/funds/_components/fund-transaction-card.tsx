@@ -1,4 +1,4 @@
-import { TransactionDetails, TransactionType } from '@/app/lib/models/funds/transaction';
+import { TransactionDetails, TransactionType } from '@/app/lib/models/funds/transaction.model';
 
 export interface FundTransactionCardProps {
   transaction: TransactionDetails;

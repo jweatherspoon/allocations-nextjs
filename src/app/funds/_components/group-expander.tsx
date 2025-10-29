@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { FundGroup } from '@/app/lib/models/funds/group';
-import { FundDetails } from '@/app/lib/models/funds/fund';
+import { FundGroup } from '@/app/lib/models/funds/group.model';
+import { FundDetails } from '@/app/lib/models/funds/fund.model';
 import FundCard from './fund-card';
 
 interface HierarchyNode extends FundGroup {

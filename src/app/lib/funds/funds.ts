@@ -2,8 +2,8 @@
 
 import { fetchTestData } from '@/app/lib/_test-data/test-data';
 import { verifySession } from '@/app/lib/auth/session';
-import { FundDetails } from '@/app/lib/models/funds/fund';
-import { TransactionDetails } from '@/app/lib/models/funds/transaction';
+import { FundDetails } from '@/app/lib/models/funds/fund.model';
+import { TransactionDetails } from '@/app/lib/models/funds/transaction.model';
 
 export async function getActiveFunds(): Promise<FundDetails[]> {
   const session = await verifySession();
@@ -15,6 +15,21 @@ export async function getActiveFunds(): Promise<FundDetails[]> {
   const activeFunds: FundDetails[] = await getTestFunds(); // Replace with actual data fetching logic
 
   return activeFunds.sort((a, b) => (b.rank || 0) - (a.rank || 0));
+}
+
+export async function getFundDetailsV2(
+  fundIds: string[]
+): Promise<FundDetails[] | null> {
+  const session = await verifySession();
+  if (!session) {
+    throw new Error('Unauthorized');
+  }
+
+  // Fetch fund details from the database or any other source
+  const allFunds = await getTestFunds(); // Replace with actual data fetching logic
+  const fundDetails = allFunds.filter((fund) => fundIds.includes(fund.id));
+
+  return fundDetails;
 }
 
 export async function getFundDetails(

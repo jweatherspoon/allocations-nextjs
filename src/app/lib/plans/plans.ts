@@ -2,11 +2,22 @@
 
 import { fetchTestData } from '@/app/lib/_test-data/test-data';
 import { verifySession } from '@/app/lib/auth/session';
-import { PlanDetails, PlannedAllocation } from '@/app/lib/models/funds/plan';
+import {
+  PlanDetails,
+  PlannedAllocation,
+} from '@/app/lib/models/funds/plan.model';
 
 export async function getAllPlans(): Promise<PlanDetails[]> {
   await verifySession();
   return getTestPlans();
+}
+
+export async function getPlanDetails(
+  planId: string
+): Promise<PlanDetails | null> {
+  await verifySession();
+  const plans = await getTestPlans();
+  return plans.find((plan) => plan.id === planId) || null;
 }
 
 async function getTestPlans(): Promise<PlanDetails[]> {

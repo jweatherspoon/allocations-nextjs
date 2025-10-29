@@ -84,7 +84,7 @@ export default async function FundDetailsPage({
         </div>
 
         {/* Transactions */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
+        <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">
             Recent Transactions ({fundDetails.transactions.length})
           </h2>
@@ -107,7 +107,7 @@ export default async function FundDetailsPage({
         </div>
 
         {/* Fund Metadata */}
-        <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
+        <div className="bg-white rounded-lg shadow-sm border p-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Fund Information</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>

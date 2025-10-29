@@ -102,7 +102,7 @@ export function getActionForRoute(pathname: string): ActionButtonConfig | null {
     return ROUTE_ACTIONS[pathname];
   }
 
-  // Check for fund detail pages (e.g., /funds/[fundId])
+  // Check for detail pages (e.g., /funds/[fundId])
   if (pathname.startsWith('/funds/')) {
     return {
       icon: PlusIcon,
@@ -110,6 +110,17 @@ export function getActionForRoute(pathname: string): ActionButtonConfig | null {
       onClick: () => {
         // TODO: Implement add transaction logic
         console.log('Add transaction clicked');
+      },
+    };
+  }
+
+  if (pathname.startsWith('/plans/')) {
+    return {
+      icon: PlusIcon,
+      label: 'Add Allocation',
+      onClick: () => {
+        // TODO: Implement add allocation logic
+        console.log('Add allocation clicked');
       },
     };
   }

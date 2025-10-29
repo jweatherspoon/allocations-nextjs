@@ -1,4 +1,4 @@
-import { FundStatus } from '@/app/lib/models/funds/fund';
+import { FundStatus } from '@/app/lib/models/funds/fund.model';
 
 export interface FundCardProps {
   id: string;

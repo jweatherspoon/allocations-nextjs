@@ -2,7 +2,7 @@
 
 import { fetchTestData } from '@/app/lib/_test-data/test-data';
 import { verifySession } from '@/app/lib/auth/session';
-import { FundGroup } from '@/app/lib/models/funds/group';
+import { FundGroup } from '@/app/lib/models/funds/group.model';
 
 export async function getAllGroups(): Promise<FundGroup[]> {
   await verifySession();

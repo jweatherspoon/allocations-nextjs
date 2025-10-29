@@ -1,4 +1,4 @@
-import { PlanDetails } from '@/app/lib/models/funds/plan';
+import { PlanDetails } from '@/app/lib/models/funds/plan.model';
 
 interface PlanDetailsCardProps {
   plan: PlanDetails;

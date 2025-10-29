@@ -4,7 +4,7 @@ import { USER_EMAIL_KEY, USER_PASSWORD_KEY } from '@/app/lib/models/auth/user-lo
 import { redirect } from 'next/navigation';
 
 export default async function LoginPage() {
-  const session = await verifySession();
+  const session = await verifySession(true);
   if (session) {
     redirect('/');
   }

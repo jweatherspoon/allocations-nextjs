@@ -51,11 +51,17 @@ export async function createSession(userId: string) {
   });
 }
 
-export async function verifySession() {
+export async function verifySession(
+  isLoginPage = false
+): Promise<SessionPayload | null> {
   const cookieStore = await cookies();
   const sessionToken = cookieStore.get('session')?.value;
   try {
     if (!sessionToken) {
+      if (isLoginPage) {
+        return null;
+      }
+
       throw new Error('No session token found');
     }
 

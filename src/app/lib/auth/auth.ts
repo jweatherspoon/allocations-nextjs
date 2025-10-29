@@ -5,6 +5,8 @@ import {
   USER_EMAIL_KEY,
   USER_PASSWORD_KEY,
 } from '@/app/lib/models/auth/user-login.model';
+import { cookies } from 'next/headers';
+
 import { redirect } from 'next/navigation';
 
 export async function loginUser(formData: FormData) {
@@ -19,4 +21,11 @@ export async function loginUser(formData: FormData) {
   await createSession(email);
 
   redirect('/'); // Redirect to home page after login
+}
+
+export async function logout() {
+  const cookieStore = await cookies();
+  cookieStore.delete('session');
+
+  redirect('/login'); // Redirect to login page after logout
 }

@@ -1,54 +1,81 @@
 'use server';
 
-import { fetchTestData } from '@/app/lib/_test-data/test-data';
-import {
-  PlanDetails,
-  PlannedAllocation,
-} from '@/app/lib/models/funds/plan.model';
+import { getUserId } from '@/app/lib/auth/auth0';
+import { getAllocationsDbContext, getUserData } from '@/app/lib/db/db-context';
+import { PlanDetails } from '@/app/lib/models/funds/plan.model';
 
 export async function getAllPlans(): Promise<PlanDetails[]> {
-  return getTestPlans();
+  const userData = await getUserData();
+  return userData?.plans ?? [];
 }
 
 export async function getPlanDetails(
-  planId: string
-): Promise<PlanDetails | null> {
-  const plans = await getTestPlans();
-  return plans.find((plan) => plan.id === planId) || null;
-}
+  planIds: string[]
+): Promise<PlanDetails[] | null> {
+  const userId = await getUserId();
+  const container = await getAllocationsDbContext();
 
-async function getTestPlans(): Promise<PlanDetails[]> {
-  const testData = await fetchTestData();
-  return testData.data.plans
-    .map(convertPlanDetails)
-    .sort((a, b) => b.expectedDate.localeCompare(a.expectedDate));
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function convertPlanDetails(plan: any): PlanDetails {
-  return {
-    id: plan.id,
-    name: plan.name,
-    amount: plan.totalAmount,
-    expectedDate: plan.expectedDate,
-    status: plan.status,
-    allocations: plan.allocations.map(convertAllocation),
-    notes: plan.notes,
-    createdAt: plan.createdAt,
-    modifiedAt: plan.createdAt,
+  const querySpec = {
+    query:
+      'SELECT VALUE p FROM c JOIN p IN c.plans WHERE c.id = @userId AND ARRAY_CONTAINS(@planIds, p.id)',
+    parameters: [
+      { name: '@userId', value: userId },
+      { name: '@planIds', value: planIds },
+    ],
   };
+
+  const { resources } = await container.items
+    .query<PlanDetails>(querySpec)
+    .fetchAll();
+  return resources.length > 0 ? resources : null;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function convertAllocation(allocation: any): PlannedAllocation {
-  return {
-    id: allocation.id,
-    targetFundId: allocation.goalId,
-    value: allocation.amount,
-    notes: allocation.notes,
-    type: 'deposit',
-    status: 'pending',
-    createdAt: Date.now().toLocaleString(),
-    modifiedAt: Date.now().toLocaleString(),
+export async function createPlan(
+  planDetails: Partial<PlanDetails>
+): Promise<boolean> {
+  const userId = await getUserId();
+  const container = await getAllocationsDbContext();
+
+  // add metadata to the planDetails
+  const planToCreate: PlanDetails = {
+    ...planDetails,
+    id: crypto.randomUUID(),
+    name: planDetails.name || 'New Plan',
+    amount: planDetails.amount || 0,
+    expectedDate: planDetails.expectedDate || new Date().toISOString(),
+    status: planDetails.status || 'pending',
+    allocations: planDetails.allocations || [],
+    notes: planDetails.notes,
+    createdAt: new Date().toISOString(),
+    modifiedAt: new Date().toISOString(),
   };
+
+  try {
+    // Check if user document exists
+    const { resource: existingUser } = await container
+      .item(userId, userId)
+      .read();
+
+    if (existingUser) {
+      // User exists, add plan to plans array
+      const updatedPlans = existingUser.plans
+        ? [...existingUser.plans, planToCreate]
+        : [planToCreate];
+      await container.item(userId, userId).replace({
+        ...existingUser,
+        plans: updatedPlans,
+      });
+    } else {
+      // User doesn't exist, create new document with plans array
+      await container.items.create({
+        id: userId,
+        userId,
+        plans: [planToCreate],
+      });
+    }
+    return true;
+  } catch (error) {
+    console.error('Error adding plan:', error);
+    return false;
+  }
 }

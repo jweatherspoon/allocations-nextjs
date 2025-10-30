@@ -65,9 +65,9 @@ export const ROUTE_ACTIONS: RouteActionMap = {
     icon: PlusIcon,
     label: 'Add Fund',
     onClick: () => {
-      // TODO: Implement add fund logic
-      console.log('Add fund clicked');
+      
     },
+    url: '/funds/new-fund'
   },
   '/plans': {
     icon: PlusIcon,
@@ -76,6 +76,7 @@ export const ROUTE_ACTIONS: RouteActionMap = {
       // TODO: Implement create plan logic
       console.log('Create plan clicked');
     },
+    url: '/plans/new-plan'
   },
   '/analytics': {
     icon: PlusIcon,

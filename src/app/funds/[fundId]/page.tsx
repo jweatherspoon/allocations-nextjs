@@ -8,7 +8,7 @@ export default async function FundDetailsPage({
   params: Promise<{ fundId: string }>;
 }) {
   const { fundId } = await params;
-  const fundDetails = await getFundDetails(fundId);
+  const fundDetails = await getFundDetails([fundId]).then((funds) => funds ? funds[0] : null);
   if (!fundDetails) {
     notFound();
   }

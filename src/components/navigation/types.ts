@@ -9,6 +9,7 @@ export interface ActionButtonConfig {
   icon: React.ComponentType<{ className?: string }>;
   label: string;
   onClick: () => void;
+  url?: string;
 }
 
 export type RouteActionMap = {

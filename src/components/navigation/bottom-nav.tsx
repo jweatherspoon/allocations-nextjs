@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import NavButton from './nav-button';
 import ActionButton from './action-button';
@@ -8,12 +8,26 @@ import { NAV_ITEMS, getActionForRoute } from './nav-config';
 
 export default function BottomNav() {
   const pathname = usePathname();
+  const router = useRouter();
 
   // Check if current route is login
   const isLoginPage = pathname === '/login';
 
   // Get the action button config for the current route
-  const actionConfig = useMemo(() => getActionForRoute(pathname), [pathname]);
+  const actionConfig = useMemo(() => {
+    const config = getActionForRoute(pathname);
+    if (config?.url) {
+      return {
+        ...config,
+        onClick: () => {
+          config.onClick?.();
+          router.push(config.url!);
+        }
+      }
+    }
+
+    return config;
+  }, [pathname, router]);
 
   // Check if nav item is active
   const isActive = (href: string) => {

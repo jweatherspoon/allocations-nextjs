@@ -1,21 +1,21 @@
 import { notFound } from 'next/navigation';
 import { getPlanDetails } from '@/app/lib/plans/plans';
 import { PlanDetails } from '@/app/lib/models/funds/plan.model';
-import { getFundDetailsV2 } from '@/app/lib/funds/funds';
+import { getFundDetails } from '@/app/lib/funds/funds';
 import { FundDetails } from '@/app/lib/models/funds/fund.model';
 
 export default async function PlanDetailsPage({ params }: {
   params: Promise<{ planId: string }>;
 }) {
   const { planId } = await params;
-  const plan = await getPlanDetails(planId);
+  const plan = await getPlanDetails([planId]).then(plans => plans ? plans[0] : null);
 
   if (!plan) {
     notFound();
   }
 
   const targetFunds = plan.allocations.map(x => x.targetFundId);
-  const fundDetails = await getFundDetailsV2(targetFunds);
+  const fundDetails = await getFundDetails(targetFunds);
   const fundDetailsMap = new Map<string, FundDetails>(fundDetails?.map(fund => [fund.id, fund]) || []);
 
   const allocatedAmount = plan.allocations.reduce((sum, alloc) => sum + alloc.value, 0);

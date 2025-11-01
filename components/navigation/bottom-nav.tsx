@@ -52,9 +52,9 @@ export default function BottomNav() {
     >
       <div className="max-w-lg mx-auto pb-4">
         {/* Glassmorphism container */}
-        <div className="relative backdrop-blur-xl bg-white/70 dark:bg-gray-900/70 border border-white/20 rounded-2xl shadow-2xl px-6 py-2 overflow-visible">
+        <div className="relative backdrop-blur-xl bg-cream dark:bg-midnight border border-cream/20 rounded-2xl shadow-2xl px-6 py-2 overflow-visible">
           {/* Gradient overlay for depth */}
-          <div className="absolute inset-0 bg-gradient-to-t from-white/50 to-transparent dark:from-gray-900/50 rounded-2xl pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-cream/50 to-transparent dark:from-midnight/50 rounded-2xl pointer-events-none" />
 
           {/* Navigation content */}
           <div className="relative flex items-center justify-between">

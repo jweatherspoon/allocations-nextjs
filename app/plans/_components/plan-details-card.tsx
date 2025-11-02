@@ -31,9 +31,11 @@ export function PlanDetailsCard({ plan }: PlanDetailsCardProps) {
   return (
     <div className="bg-cream rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
       <div className="flex justify-between items-start mb-4">
-        <h3 className="text-lg font-semibold text-midnight truncate">
-          {plan.name}
-        </h3>
+        <div>
+          <h3 className="text-lg font-semibold text-midnight mb-2">
+            {plan.name}
+          </h3>
+        </div>
         <StatusChip status={planStatuses[plan.status]} text={plan.status} />
       </div>
       

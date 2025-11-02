@@ -6,6 +6,9 @@ import { PlanDetails, PlannedAllocation } from '../../lib/models/funds/plan.mode
 import { createPlan } from '../../lib/plans/plans';
 import { getActiveFunds } from '../../lib/funds/funds';
 import { FundDetails } from '../../lib/models/funds/fund.model';
+import TextInput from '@/components/form/inputs/text-input';
+import NumericInput from '@/components/form/inputs/numeric-input';
+import DatePickerInput from '@/components/form/inputs/date-picker-input';
 
 export default function NewPlanPage() {
   const router = useRouter();
@@ -195,7 +198,7 @@ export default function NewPlanPage() {
       <form onSubmit={handleSubmit} className="space-y-6 pb-24">
         {/* Plan Name */}
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-dusk">
+          {/* <label htmlFor="name" className="block text-sm font-medium text-dusk">
             Plan Name <span className="text-red-500">*</span>
           </label>
           <input
@@ -209,11 +212,36 @@ export default function NewPlanPage() {
             } px-3 py-2 shadow-sm focus:border-flame focus:outline-none focus:ring-1 focus:ring-flame`}
             placeholder="Enter plan name"
           />
-          {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
+          {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>} */}
+          <TextInput
+            id='plan-name'
+            label='Name'
+            value={formData.name}
+            placeholder='Plan Name'
+            onChange={(newText) => setFormData((prev) => ({ ...prev, name: newText }))}
+            validations={{
+              required: true,
+              minLength: 3,
+              maxLength: 20,
+            }}
+          />
         </div>
 
         {/* Total Amount */}
         <div>
+          <NumericInput
+            id='amount'
+            label='Total Amount'
+            step='0.01'
+            placeholder='0.00'
+            value={formData.amount}
+            onChange={(newValue) => setFormData((prev) => ({ ...prev, amount: newValue }))}
+            validations={{
+              required: true,
+              min: 0,
+            }}
+          />
+{/*           
           <label htmlFor="amount" className="block text-sm font-medium text-dusk">
             Total Amount <span className="text-red-500">*</span>
           </label>
@@ -230,12 +258,12 @@ export default function NewPlanPage() {
             } px-3 py-2 shadow-sm focus:border-flame focus:outline-none focus:ring-1 focus:ring-flame`}
             placeholder="0.00"
           />
-          {errors.amount && <p className="mt-1 text-sm text-red-600">{errors.amount}</p>}
+          {errors.amount && <p className="mt-1 text-sm text-red-600">{errors.amount}</p>} */}
         </div>
 
         {/* Expected Date */}
         <div>
-          <label htmlFor="expectedDate" className="block text-sm font-medium text-dusk">
+          {/* <label htmlFor="expectedDate" className="block text-sm font-medium text-dusk">
             Expected Date <span className="text-red-500">*</span>
           </label>
           <input
@@ -250,12 +278,21 @@ export default function NewPlanPage() {
           />
           {errors.expectedDate && (
             <p className="mt-1 text-sm text-red-600">{errors.expectedDate}</p>
-          )}
+          )} */}
+          <DatePickerInput
+            id='expectedDate'
+            label='Expected Date'
+            value={formData.expectedDate}
+            onChange={(newDate) => setFormData((prev) => ({ ...prev, expectedDate: newDate }))}
+            validations={{
+              required: true,
+            }}
+          />
         </div>
 
         {/* Notes */}
         <div>
-          <label htmlFor="notes" className="block text-sm font-medium text-dusk">
+          {/* <label htmlFor="notes" className="block text-sm font-medium text-dusk">
             Notes (Optional)
           </label>
           <textarea
@@ -266,6 +303,14 @@ export default function NewPlanPage() {
             rows={3}
             className="mt-1 block w-full rounded-md border border-platinum px-3 py-2 shadow-sm focus:border-flame focus:outline-none focus:ring-1 focus:ring-flame"
             placeholder="Enter any notes about this plan"
+          /> */}
+          <TextInput 
+            id='notes'
+            label='Notes (Optional)'
+            value={formData.notes}
+            placeholder='Enter any notes about this plan'
+            onChange={(newText) => setFormData((prev) => ({ ...prev, notes: newText }))}
+            rows={3}
           />
         </div>
 

@@ -189,16 +189,13 @@ export default function NewPlanPage() {
   return (
     <div className="w-full max-w-2xl mx-auto p-6">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Create New Plan</h1>
-        <p className="mt-1 text-sm text-gray-600">
-          Fill in the details to create a new allocation plan
-        </p>
+        <h1 className="text-2xl font-bold text-midnight">Create New Plan</h1>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6 pb-24">
         {/* Plan Name */}
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="name" className="block text-sm font-medium text-dusk">
             Plan Name <span className="text-red-500">*</span>
           </label>
           <input
@@ -208,8 +205,8 @@ export default function NewPlanPage() {
             value={formData.name}
             onChange={handleChange}
             className={`mt-1 block w-full rounded-md border ${
-              errors.name ? 'border-red-500' : 'border-gray-300'
-            } px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500`}
+              errors.name ? 'border-red-500' : 'border-platinum'
+            } px-3 py-2 shadow-sm focus:border-flame focus:outline-none focus:ring-1 focus:ring-flame`}
             placeholder="Enter plan name"
           />
           {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
@@ -217,7 +214,7 @@ export default function NewPlanPage() {
 
         {/* Total Amount */}
         <div>
-          <label htmlFor="amount" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="amount" className="block text-sm font-medium text-dusk">
             Total Amount <span className="text-red-500">*</span>
           </label>
           <input
@@ -229,8 +226,8 @@ export default function NewPlanPage() {
             step="0.01"
             min="0"
             className={`mt-1 block w-full rounded-md border ${
-              errors.amount ? 'border-red-500' : 'border-gray-300'
-            } px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500`}
+              errors.amount ? 'border-red-500' : 'border-platinum'
+            } px-3 py-2 shadow-sm focus:border-flame focus:outline-none focus:ring-1 focus:ring-flame`}
             placeholder="0.00"
           />
           {errors.amount && <p className="mt-1 text-sm text-red-600">{errors.amount}</p>}
@@ -238,7 +235,7 @@ export default function NewPlanPage() {
 
         {/* Expected Date */}
         <div>
-          <label htmlFor="expectedDate" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="expectedDate" className="block text-sm font-medium text-dusk">
             Expected Date <span className="text-red-500">*</span>
           </label>
           <input
@@ -248,8 +245,8 @@ export default function NewPlanPage() {
             value={formData.expectedDate}
             onChange={handleChange}
             className={`mt-1 block w-full rounded-md border ${
-              errors.expectedDate ? 'border-red-500' : 'border-gray-300'
-            } px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500`}
+              errors.expectedDate ? 'border-red-500' : 'border-platinum'
+            } px-3 py-2 shadow-sm focus:border-flame focus:outline-none focus:ring-1 focus:ring-flame`}
           />
           {errors.expectedDate && (
             <p className="mt-1 text-sm text-red-600">{errors.expectedDate}</p>
@@ -258,7 +255,7 @@ export default function NewPlanPage() {
 
         {/* Notes */}
         <div>
-          <label htmlFor="notes" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="notes" className="block text-sm font-medium text-dusk">
             Notes (Optional)
           </label>
           <textarea
@@ -267,29 +264,29 @@ export default function NewPlanPage() {
             value={formData.notes}
             onChange={handleChange}
             rows={3}
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="mt-1 block w-full rounded-md border border-platinum px-3 py-2 shadow-sm focus:border-flame focus:outline-none focus:ring-1 focus:ring-flame"
             placeholder="Enter any notes about this plan"
           />
         </div>
 
         {/* Allocations Section */}
-        <div className="border-t border-gray-200 pt-6">
+        <div className="border-t border-flame pt-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">
+            <h2 className="text-lg font-semibold text-midnight">
               Allocations <span className="text-red-500">*</span>
             </h2>
             <button
               type="button"
               onClick={addAllocation}
               disabled={isLoadingFunds}
-              className="px-3 py-1 text-sm font-medium text-blue-600 bg-blue-50 border border-blue-300 rounded-md hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-3 py-1 text-sm font-medium text-cream bg-flame border border-cream rounded-md hover:bg-flame-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-flame-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               + Add Allocation
             </button>
           </div>
 
           {isLoadingFunds ? (
-            <p className="text-sm text-gray-500">Loading funds...</p>
+            <p className="text-sm text-dusk">Loading funds...</p>
           ) : funds.length === 0 ? (
             <div className="rounded-md bg-yellow-50 p-4">
               <p className="text-sm text-yellow-800">
@@ -299,7 +296,7 @@ export default function NewPlanPage() {
           ) : (
             <>
               {allocations.length === 0 ? (
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-dusk">
                   No allocations added yet. Click &quot;Add Allocation&quot; to start.
                 </p>
               ) : (
@@ -307,10 +304,10 @@ export default function NewPlanPage() {
                   {allocations.map((allocation, index) => (
                     <div
                       key={index}
-                      className="p-4 border border-gray-200 rounded-md bg-gray-50"
+                      className="p-4 border border-platinum rounded-md bg-cream"
                     >
                       <div className="flex justify-between items-start mb-3">
-                        <h3 className="text-sm font-medium text-gray-700">
+                        <h3 className="text-sm font-medium text-midnight">
                           Allocation {index + 1}
                         </h3>
                         <button

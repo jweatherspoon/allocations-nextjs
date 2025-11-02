@@ -1,4 +1,7 @@
+import { ProgressBar } from '@/components/progress/progress-bar';
 import { FundStatus } from '../../lib/models/funds/fund.model';
+import StatusChip from '@/components/chip/status-chip';
+import { ChipStatus } from '@/models/status/chip-status.enum';
 
 export interface FundCardProps {
   id: string;
@@ -33,19 +36,21 @@ export default function FundCard(props: FundCardProps) {
       {/* Progress section */}
       {targetAmount && (
         <div className="space-y-2">
-          <div className="flex justify-between items-center text-sm">
-            <span className="text-gray-500">Progress</span>
-            <span className="font-medium text-gray-900">{progressPercentage.toFixed(1)}%</span>
+          <div className="flex justify-end items-center text-sm">
+            {/* <span className="text-gray-500">Progress</span> */}
+            <StatusChip status={ChipStatus.ERROR} text={`${progressPercentage.toFixed(1)}%`} />
+            {/* <span className="font-medium text-gray-900">{progressPercentage.toFixed(1)}%</span> */}
           </div>
           
           {/* Progress bar */}
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          {/* <div className="w-full bg-gray-200 rounded-full h-2">
             <div 
               className="bg-blue-600 h-2 rounded-full transition-all duration-300"
               style={{ width: `${progressPercentage}%` }}
             />
-          </div>
-          
+          </div> */}
+          <ProgressBar progress={progressPercentage} />
+
           {/* Amount info */}
           <div className="flex justify-between items-center text-sm">
             <span className="text-gray-500">

@@ -1,4 +1,4 @@
-export default function ListViewPageContainer({
+export default function TitledPageContainer({
   children,
   title,
 }: {

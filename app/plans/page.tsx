@@ -1,4 +1,4 @@
-import ListViewPageContainer from '@/components/containers/pages/list-view-page-container';
+import TitledPageContainer from '@/components/containers/pages/titled-page-container';
 import { getAllPlans } from '../lib/plans/plans';
 import { PlanDetailsCard } from './_components/plan-details-card';
 import Link from 'next/link';
@@ -7,7 +7,7 @@ export default async function PlansPage() {
   const plans = await getAllPlans();
 
   return (
-    <ListViewPageContainer title='Plans'>
+    <TitledPageContainer title='Plans'>
       {plans && plans.length > 0 ? (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {plans.map((plan) => (
@@ -34,6 +34,6 @@ export default async function PlansPage() {
             </div>
           </div>
         )}
-    </ListViewPageContainer>
+    </TitledPageContainer>
   );
 }

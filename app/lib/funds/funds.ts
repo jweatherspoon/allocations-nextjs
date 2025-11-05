@@ -32,6 +32,7 @@ export async function createFund(
     currentAmount: fundDetails.currentAmount || 0,
     description: fundDetails.description || '',
     targetAmount: fundDetails.targetAmount,
+    targetDate: fundDetails.targetDate,
     groupId: fundDetails.groupId,
     rank: fundDetails.rank,
   };

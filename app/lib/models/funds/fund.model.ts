@@ -15,5 +15,6 @@ export interface FundDetails {
 
   rank?: number;
   groupId?: string;
+  targetDate?: string;
   targetAmount?: number;
 }

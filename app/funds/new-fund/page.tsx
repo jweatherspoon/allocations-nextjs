@@ -7,6 +7,7 @@ import { createFund } from '../../lib/funds/funds';
 import TitledPageContainer from '@/components/containers/pages/titled-page-container';
 import TextInput from '@/components/form/inputs/text-input';
 import NumericInput from '@/components/form/inputs/numeric-input';
+import DatePickerInput from '@/components/form/inputs/date-picker-input';
 
 export default function NewFundPage() {
   const router = useRouter();
@@ -16,7 +17,8 @@ export default function NewFundPage() {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    targetAmount: ''
+    targetAmount: '',
+    targetDate: '',
   });
 
   const validateForm = (): boolean => {
@@ -55,6 +57,7 @@ export default function NewFundPage() {
         status: 'active' as FundStatus,
         currentAmount: 0,
         targetAmount: formData.targetAmount ? parseFloat(formData.targetAmount) : undefined,
+        targetDate: formData.targetDate || undefined,
         transactions: [],
       };
 
@@ -124,6 +127,14 @@ export default function NewFundPage() {
           value={formData.targetAmount}
           onChange={(newValue) => setFormData((prev) => ({ ...prev, targetAmount: newValue }))}
           placeholder='0.00'
+        />
+
+        {/* Target Date (Optional) */}
+        <DatePickerInput 
+          id='targetDate'
+          label='Target Date (Optional)'
+          value={formData.targetDate}
+          onChange={(newValue) => setFormData((prev) => ({ ...prev, targetDate: newValue }))}
         />
 
         {/* Submit Error */}

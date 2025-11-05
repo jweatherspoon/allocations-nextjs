@@ -28,18 +28,19 @@ export default async function PlansPage() {
         </h2>
         <hr className='flex-grow border-t border-flame' />
       </div>
-      <div className='mb-6'>
+      <div className='mb-6 space-y-4'>
         {pendingPlans?.length ? (
-          <div>
-            {pendingPlans.map((plan) => (
-              <PlanDetailsCard key={plan.id} plan={plan} />
-            ))}
-          </div>
+          pendingPlans.map((plan) => (
+            <div key={plan.id}>
+              <Link href={`/plans/${plan.id}`}>
+                <PlanDetailsCard plan={plan} />
+              </Link>
+            </div>
+          ))
         ) : (
           <p className='text-dusk text-center'>No currently pending plans.</p>
         )}
       </div>
-
       <div className='mb-4 flex gap-2 items-center'>
         <h2 className='text-lg font-semibold text-midnight mb-2'>
           Completed Plans
@@ -49,13 +50,18 @@ export default async function PlansPage() {
       <div className='space-y-4'>
         {completedPlans?.length ? (
           completedPlans.map((plan) => (
-            <PlanDetailsCard key={plan.id} plan={plan} />
+            <div key={plan.id}>
+              <Link href={`/plans/${plan.id}`}>
+                <PlanDetailsCard plan={plan} />
+              </Link>
+            </div>
           ))
         ) : (
           <p className='text-dusk'>No completed plans found.</p>
         )}
       </div>
 
+      {/* TODO: Add "Create Plan" button functionality */}
       {!plans.length && (
         <div className='bg-cream rounded-lg shadow-sm border p-12 text-center'>
           <div className='max-w-md mx-auto'>

@@ -1,7 +1,13 @@
 'use server';
 
+import { TransactionDetails } from '@/app/lib/models/funds/transaction.model';
 import { getUserId } from '../auth/auth0';
-import { addFund, fetchFundDetails, getUserData } from '../db/db-context';
+import {
+  addFund,
+  addTransaction,
+  fetchFundDetails,
+  getUserData,
+} from '../db/db-context';
 import { FundDetails } from '../models/funds/fund.model';
 
 export async function getActiveFunds(): Promise<FundDetails[]> {
@@ -38,4 +44,13 @@ export async function createFund(
   };
 
   return addFund(userId, fundToCreate);
+}
+
+export async function addTransactionToFund(
+  fundId: string,
+  transaction: TransactionDetails
+): Promise<boolean> {
+  const userId = await getUserId();
+
+  return addTransaction(userId, fundId, transaction);
 }

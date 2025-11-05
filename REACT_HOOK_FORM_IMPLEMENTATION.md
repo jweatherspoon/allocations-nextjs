@@ -1,11 +1,13 @@
 # React Hook Form Implementation
 
 ## Overview
+
 Successfully migrated the `AddTransactionForm` component to use React Hook Form for elegant, type-safe form validation and state management.
 
 ## Changes Made
 
 ### 1. Installed Dependencies
+
 ```bash
 npm install react-hook-form
 ```
@@ -15,16 +17,19 @@ npm install react-hook-form
 Created three new wrapper components that bridge React Hook Form with your existing custom input components:
 
 #### `controlled-numeric-input.tsx`
+
 - Wraps `NumericInput` with React Hook Form's `useController`
 - Maps your custom `NumericInputValidations` to React Hook Form's validation rules
 - Provides type-safe integration with TypeScript generics
 
 #### `controlled-select-input.tsx`
+
 - Wraps `SelectInput` with React Hook Form's `useController`
 - Maps your custom `SelectInputValidations` to React Hook Form's validation rules
 - Maintains the same API as your base component
 
 #### `controlled-text-input.tsx`
+
 - Wraps `TextInput` with React Hook Form's `useController`
 - Maps your custom `TextInputValidations` to React Hook Form's validation rules
 - Supports all text input features including multi-line (textarea)
@@ -32,12 +37,14 @@ Created three new wrapper components that bridge React Hook Form with your exist
 ### 3. Updated `AddTransactionForm`
 
 **Before:**
+
 - Manual state management with `useState`
 - Manual error tracking with separate state
 - Custom `handleChange` function for each field
 - Error-prone validation coordination
 
 **After:**
+
 - `useForm` hook manages all form state
 - Automatic validation on change (`mode: 'onChange'`)
 - Built-in `isValid` and `isSubmitting` states
@@ -47,6 +54,7 @@ Created three new wrapper components that bridge React Hook Form with your exist
 ### 4. Updated Button Component
 
 Enhanced the `Button` component to support form submissions:
+
 - Made `onClick` optional (not needed for form submit buttons)
 - Added `type` prop to support `submit`, `button`, and `reset`
 - Properly typed with TypeScript
@@ -54,26 +62,31 @@ Enhanced the `Button` component to support form submissions:
 ## Benefits
 
 ### 1. **Elegant Error Handling**
+
 - Errors are automatically tracked by React Hook Form
 - No manual error state management needed
 - Validation runs on every change (configurable)
 
 ### 2. **Type Safety**
+
 - Full TypeScript support with proper type inference
 - Generic wrappers ensure type safety across the form
 - Prevents type mismatches at compile time
 
 ### 3. **Performance**
+
 - Only re-renders the fields that change
 - Optimized with internal subscriptions
 - No unnecessary full form re-renders
 
 ### 4. **Consistent API**
+
 - Your existing validation interfaces remain unchanged
 - Seamless integration with your custom components
 - Same developer experience, better internals
 
 ### 5. **Future-Proof**
+
 - Easy to add more validation rules
 - Simple to integrate with async validation
 - Built-in support for complex forms
@@ -118,7 +131,7 @@ export default function MyForm() {
           min: 0.01,
         }}
       />
-      
+
       <button type='submit' disabled={!isValid || isSubmitting}>
         Submit
       </button>
@@ -134,6 +147,7 @@ To migrate other forms in your application:
 1. **Install React Hook Form** (already done)
 
 2. **Import the controlled components**:
+
    ```tsx
    import { ControlledNumericInput } from '@/components/form/inputs/controlled-numeric-input';
    import { ControlledSelectInput } from '@/components/form/inputs/controlled-select-input';
@@ -141,28 +155,34 @@ To migrate other forms in your application:
    ```
 
 3. **Set up the form**:
+
    ```tsx
    const { control, handleSubmit, formState } = useForm({
      mode: 'onChange',
-     defaultValues: { /* your defaults */ },
+     defaultValues: {
+       /* your defaults */
+     },
    });
    ```
 
 4. **Replace manual inputs with controlled versions**:
+
    - Replace `<NumericInput>` with `<ControlledNumericInput>`
    - Replace `<SelectInput>` with `<ControlledSelectInput>`
    - Replace `<TextInput>` with `<ControlledTextInput>`
 
 5. **Add `name` and `control` props**:
+
    ```tsx
    <ControlledNumericInput
-     name='fieldName'  // Required
+     name='fieldName' // Required
      control={control} // Required
      // ... other props
    />
    ```
 
 6. **Update form submission**:
+
    ```tsx
    <form onSubmit={handleSubmit(onSubmit)}>
    ```
@@ -176,15 +196,15 @@ To migrate other forms in your application:
 
 Your custom validation interfaces map directly to React Hook Form:
 
-| Your Validation | React Hook Form Rule |
-|----------------|---------------------|
-| `required: true` | `required: 'This field is required'` |
-| `min: 0.01` | `min: { value: 0.01, message: '...' }` |
-| `max: 100` | `max: { value: 100, message: '...' }` |
-| `minLength: 5` | `minLength: { value: 5, message: '...' }` |
-| `maxLength: 120` | `maxLength: { value: 120, message: '...' }` |
-| `pattern: /regex/` | `pattern: { value: /regex/, message: '...' }` |
-| `customValidations` | `validate: { custom1: fn, custom2: fn }` |
+| Your Validation     | React Hook Form Rule                          |
+| ------------------- | --------------------------------------------- |
+| `required: true`    | `required: 'This field is required'`          |
+| `min: 0.01`         | `min: { value: 0.01, message: '...' }`        |
+| `max: 100`          | `max: { value: 100, message: '...' }`         |
+| `minLength: 5`      | `minLength: { value: 5, message: '...' }`     |
+| `maxLength: 120`    | `maxLength: { value: 120, message: '...' }`   |
+| `pattern: /regex/`  | `pattern: { value: /regex/, message: '...' }` |
+| `customValidations` | `validate: { custom1: fn, custom2: fn }`      |
 
 ## Next Steps
 

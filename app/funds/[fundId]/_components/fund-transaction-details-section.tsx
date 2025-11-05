@@ -2,11 +2,19 @@
 
 import AddTransactionModal from '@/app/funds/[fundId]/_components/add-transaction-modal';
 import FundTransactionCard from '@/app/funds/_components/fund-transaction-card';
+import { addTransactionToFund } from '@/app/lib/funds/funds';
 import { FundDetails } from '@/app/lib/models/funds/fund.model';
 import DetailsSectionContainer from '@/components/containers/sections/details-section-container';
 import { useState } from 'react';
 
-export default function FundTransactionDetailsSection({ fundDetails }: { fundDetails: FundDetails }) {
+export default function FundTransactionDetailsSection({
+  fundDetails,
+}: {
+  fundDetails: FundDetails;
+}) {
+  const [newTransactions, setNewTransactions] = useState(
+    fundDetails.transactions
+  );
   const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
 
   return (
@@ -14,9 +22,7 @@ export default function FundTransactionDetailsSection({ fundDetails }: { fundDet
       {/* Recent Transactions Section */}
       <DetailsSectionContainer>
         <div className='flex justify-between items-end mb-2'>
-          <h3 className='text-lg text-midnight'>
-            Recent Transactions
-          </h3>
+          <h3 className='text-lg text-midnight'>Recent Transactions</h3>
           <button
             className='p-1.5 rounded-full bg-flame text-cream hover:bg-opacity-90 transition-colors'
             aria-label='Add new transaction'
@@ -38,23 +44,34 @@ export default function FundTransactionDetailsSection({ fundDetails }: { fundDet
         </div>
         <hr className='border-t border-flame mb-2' />
         <div className='space-y-3 overflow-y'>
-          {fundDetails.transactions.length > 0 ? (
-            fundDetails.transactions.sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 10).map((transaction) => (
-              <FundTransactionCard key={transaction.id} transaction={transaction} />
-            ))
+          {newTransactions.length > 0 ? (
+            newTransactions
+              .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+              .slice(0, 10)
+              .map((transaction) => (
+                <FundTransactionCard
+                  key={transaction.id}
+                  transaction={transaction}
+                />
+              ))
           ) : (
-            <p className='text-dusk'>
-              No recent transactions found.
-            </p>
+            <p className='text-dusk'>No recent transactions found.</p>
           )}
         </div>
       </DetailsSectionContainer>
-      <AddTransactionModal 
-        isOpen={isTransactionModalOpen} 
-        onClose={() => setIsTransactionModalOpen(false)} 
+      <AddTransactionModal
+        isOpen={isTransactionModalOpen}
+        onClose={() => setIsTransactionModalOpen(false)}
         onSave={async (data) => {
           // Here you would typically send the new transaction to your backend or update state
           console.log('New Transaction Data:', data);
+          const success = await addTransactionToFund(fundDetails.id, data);
+          if (!success) {
+            console.error('Failed to add transaction');
+            return;
+          }
+
+          setNewTransactions((prev) => [...prev, data]);
         }}
       />
     </div>

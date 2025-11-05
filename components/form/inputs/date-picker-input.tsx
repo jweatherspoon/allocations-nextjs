@@ -13,7 +13,7 @@ export default function DatePickerInput({
   id: string;
   label: string;
   value: string;
-  onChange: (newDate: string) => void;
+  onChange: (newDate: string, err?: string) => void;
   validations?: DatePickerInputValidations;
 }) {
   const [hasBeenFocused, setHasBeenFocused] = useState(false);
@@ -23,14 +23,22 @@ export default function DatePickerInput({
       if (validations.required && !value) {
         return 'This field is required';
       }
-      
+
       const parsedDate = new Date(Date.parse(value));
 
-      if (validations.minDate && parsedDate && parsedDate < validations.minDate) {
+      if (
+        validations.minDate &&
+        parsedDate &&
+        parsedDate < validations.minDate
+      ) {
         return `Date cannot be before ${validations.minDate.toLocaleDateString()}`;
       }
 
-      if (validations.maxDate && parsedDate && parsedDate > validations.maxDate) {
+      if (
+        validations.maxDate &&
+        parsedDate &&
+        parsedDate > validations.maxDate
+      ) {
         return `Date cannot be after ${validations.maxDate.toLocaleDateString()}`;
       }
 
@@ -47,20 +55,22 @@ export default function DatePickerInput({
 
   return (
     <div>
-      <label htmlFor={id} className="block text-sm font-medium text-dusk">
+      <label htmlFor={id} className='block text-sm font-medium text-dusk'>
         {label}
       </label>
       <input
-        type="date"
+        type='date'
         id={id}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => onChange(e.target.value, validationError)}
         onBlur={() => setHasBeenFocused(true)}
         className={`mt-1 block w-full rounded-md border ${
           validationError ? 'border-red-500' : 'border-platinum'
         } px-3 py-2 shadow-sm focus:border-flame focus:outline-none focus:ring-1 focus:ring-flame`}
       />
-      {validationError && <p className="mt-1 text-sm text-red-600">{validationError}</p>}
+      {validationError && (
+        <p className='mt-1 text-sm text-red-600'>{validationError}</p>
+      )}
     </div>
   );
 }

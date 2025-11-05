@@ -19,3 +19,8 @@ export interface DatePickerInputValidations {
   maxDate?: Date;
   customValidations?: ((value: Date) => string | null)[];
 }
+
+export interface SelectInputValidations {
+  required?: boolean;
+  customValidations?: ((value: string) => string | null)[];
+}

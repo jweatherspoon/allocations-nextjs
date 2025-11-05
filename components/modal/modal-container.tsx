@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 
 interface ModalContainerProps {
   isOpen: boolean;
-  onClose: () => void;
+  onClose?: () => void;
   children: ReactNode;
   className?: string;
 }
@@ -21,7 +21,7 @@ export default function ModalContainer({
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) {
-        onClose();
+        onClose?.();
       }
     };
 
@@ -39,7 +39,7 @@ export default function ModalContainer({
 
   const handleOverlayClick = (e: React.MouseEvent) => {
     if (e.target === overlayRef.current) {
-      onClose();
+      onClose?.();
     }
   };
 
@@ -48,13 +48,13 @@ export default function ModalContainer({
   return createPortal(
     <div
       ref={overlayRef}
-      className={`fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 ${className}`}
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-midnight bg-opacity-10 ${className}`}
       onClick={handleOverlayClick}
     >
-      <div className="relative max-h-[90vh] max-w-[90vw] overflow-auto rounded-lg bg-white p-6 shadow-xl">
+      <div className="relative max-h-[90vh] w-[80vw] max-w-[90vw] overflow-auto rounded-lg bg-cream p-6 shadow-xl">
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 text-gray-500 hover:text-gray-700"
+          className="absolute right-3 top-3 text-xl text-flame hover:text-flame font-semibold"
           aria-label="Close modal"
         >
           ✕

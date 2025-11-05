@@ -1,7 +1,7 @@
 'use client';
 
 import { NumericInputValidations } from '@/models/validations/form-validations';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 export default function NumericInput({
   id,
@@ -11,14 +11,16 @@ export default function NumericInput({
   onChange,
   placeholder,
   validations,
+  onError,
 }: {
   id: string;
   label: string;
   value: string;
-  onChange: (newValue: string) => void;
+  onChange: (newValue: string, error?: string) => void;
   step?: string;
   placeholder?: string;
   validations?: NumericInputValidations;
+  onError?: (error?: string) => void;
 }) {
   const [hasBeenFocused, setHasBeenFocused] = useState(false);
 
@@ -26,50 +28,71 @@ export default function NumericInput({
     if (hasBeenFocused && validations) {
       // Perform validation logic here
       const parsedValue = Number(value);
-      
-      if (validations.required && (value === '' || value === null || value === undefined || isNaN(parsedValue))) {
-        return 'This field is required';
-      }
 
-      if (validations.min !== undefined && parsedValue < validations.min) {
-        return `Minimum value is ${validations.min}`;
-      }
-
-      if (validations.max !== undefined && parsedValue > validations.max) {
-        return `Maximum value is ${validations.max}`;
+      let error: string | undefined = undefined;
+      if (
+        validations.required &&
+        (value === '' ||
+          value === null ||
+          value === undefined ||
+          isNaN(parsedValue))
+      ) {
+        error = 'This field is required';
+      } else if (
+        validations.min !== undefined &&
+        parsedValue < validations.min
+      ) {
+        error = `Minimum value is ${validations.min}`;
+      } else if (
+        validations.max !== undefined &&
+        parsedValue > validations.max
+      ) {
+        error = `Maximum value is ${validations.max}`;
       }
 
       if (validations.customValidations) {
         for (const validateFn of validations.customValidations) {
-          const error = validateFn(parsedValue);
-          if (error) {
-            return error;
+          const customError = validateFn(parsedValue);
+          if (customError) {
+            error = customError;
+            break;
           }
         }
       }
+
+      return error;
     }
   }, [value, validations, hasBeenFocused]);
 
+  const handleChange = useMemo(() => {
+    return (e: React.ChangeEvent<HTMLInputElement>) => {
+      onError?.(validationError);
+      onChange(e.target.value, validationError);
+    };
+  }, [onChange, validationError, onError]);
+
   return (
     <div>
-      <label htmlFor={id} className="block text-sm font-medium text-dusk mb-1">
+      <label htmlFor={id} className='block text-sm font-medium text-dusk mb-1'>
         {label}
-        {validations?.required && <span className="text-red-500">&nbsp;*</span>}
+        {validations?.required && <span className='text-red-500'>&nbsp;*</span>}
       </label>
       <input
         id={id}
-        type="number"
+        type='number'
         aria-label={label}
         value={value}
         step={step || 'any'}
         min={validations?.min}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={handleChange}
         onBlur={() => setHasBeenFocused(true)}
         placeholder={placeholder}
-        className={`mt-1 block w-full rounded-md border ${validationError ? 'border-red-500' : 'border-platinum'} px-3 py-2 shadow-sm focus:border-flame focus:outline-none focus:ring-1 focus:ring-flame`}
+        className={`mt-1 block w-full rounded-md border ${
+          validationError ? 'border-red-500' : 'border-platinum'
+        } px-3 py-2 shadow-sm focus:border-flame focus:outline-none focus:ring-1 focus:ring-flame`}
       />
       {validationError && (
-        <p className="text-sm text-red-600 mb-1">{validationError}</p>
+        <p className='text-sm text-red-600 mb-1'>{validationError}</p>
       )}
     </div>
   );

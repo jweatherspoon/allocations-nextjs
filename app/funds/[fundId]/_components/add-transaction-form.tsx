@@ -1,7 +1,7 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
-import { TransactionDetails } from '@/lib/models/funds/transaction.model';
+import { TransactionDetails } from '@/app/lib/models/funds/transaction.model';
 import Button from '@/components/button/button';
 import { ControlledNumericInput } from '@/components/form/inputs/controlled-numeric-input';
 import { ControlledSelectInput } from '@/components/form/inputs/controlled-select-input';

@@ -1,61 +1,68 @@
 'use client';
 
-import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { TransactionDetails } from '@/lib/models/funds/transaction.model';
 import Button from '@/components/button/button';
-import NumericInput from '@/components/form/inputs/numeric-input';
-import SelectInput from '@/components/form/inputs/select-input';
-import TextInput from '@/components/form/inputs/text-input';
-import ModalContainer from '@/components/modal/modal-container';
+import { ControlledNumericInput } from '@/components/form/inputs/controlled-numeric-input';
+import { ControlledSelectInput } from '@/components/form/inputs/controlled-select-input';
+import { ControlledTextInput } from '@/components/form/inputs/controlled-text-input';
+
+interface TransactionFormData {
+  amount: string;
+  type: string;
+  notes: string;
+}
 
 export default function AddTransactionForm({
   onSave,
 }: {
   onSave: (data: TransactionDetails) => Promise<void>;
 }) {
-  const [formData, setFormData] = useState({
-    amount: '',
-    type: 'deposit',
-    notes: '',
+  const {
+    control,
+    handleSubmit,
+    formState: { isValid, isSubmitting },
+  } = useForm<TransactionFormData>({
+    mode: 'onChange',
+    defaultValues: {
+      amount: '',
+      type: 'deposit',
+      notes: '',
+    },
   });
 
-  const [errors, setErrors] = useState<Record<string, string>>({
-    amount: 'x',
-  });
+  const onSubmit = async (data: TransactionFormData) => {
+    const transaction: TransactionDetails = {
+      id: window.crypto.randomUUID(),
+      type: data.type as 'deposit' | 'withdrawal' | 'transfer',
+      value: parseFloat(data.amount),
+      status: 'completed',
+      createdAt: new Date().toISOString(),
+      modifiedAt: new Date().toISOString(),
+      notes: data.notes,
+    };
 
-  const hasErrors = Object.keys(errors).some((key) => errors[key]);
-
-  const handleChange = (field: string, value: string, error?: string) => {
-    setFormData({ ...formData, [field]: value });
-    setErrors((prevErrors) => {
-      const newErrors = { ...prevErrors };
-      if (error) {
-        newErrors[field] = error;
-      } else {
-        delete newErrors[field];
-      }
-
-      console.log(prevErrors, newErrors, field, error);
-      return newErrors;
-    });
+    await onSave(transaction);
   };
 
   return (
     <div className='mt-2'>
-      <form className='space-y-4' onSubmit={(e) => e.preventDefault()}>
-        <NumericInput
+      <form className='space-y-4' onSubmit={handleSubmit(onSubmit)}>
+        <ControlledNumericInput
+          name='amount'
+          control={control}
           id='transaction-amount'
           label='Transaction Amount'
           placeholder='Enter amount'
-          value={formData.amount}
-          onChange={(e, err) => handleChange('amount', e, err)}
           validations={{
             required: true,
             min: 0.01,
           }}
         />
 
-        <SelectInput
+        <ControlledSelectInput
+          name='type'
+          control={control}
           id='transaction-type'
           label='Transaction Type'
           options={[
@@ -63,18 +70,16 @@ export default function AddTransactionForm({
             { value: 'withdrawal', label: 'Withdrawal' },
             { value: 'transfer', label: 'Transfer' },
           ]}
-          value={formData.type}
-          onChange={(e, err) => handleChange('type', e, err)}
           validations={{
             required: true,
           }}
         />
 
-        <TextInput
+        <ControlledTextInput
+          name='notes'
+          control={control}
           id='transaction-notes'
           label='Notes (Optional)'
-          value={formData.notes}
-          onChange={(e, err) => handleChange('notes', e, err)}
           placeholder='Additional details about the transaction'
           validations={{
             maxLength: 120,
@@ -83,21 +88,9 @@ export default function AddTransactionForm({
         />
 
         <Button
-          disabled={hasErrors}
+          type='submit'
+          disabled={!isValid || isSubmitting}
           className='w-full mt-4'
-          onClick={async () => {
-            const transaction: TransactionDetails = {
-              id: window.crypto.randomUUID(),
-              type: formData.type as 'deposit' | 'withdrawal' | 'transfer',
-              value: parseFloat(formData.amount),
-              status: 'completed',
-              createdAt: new Date().toISOString(),
-              modifiedAt: new Date().toISOString(),
-              notes: formData.notes,
-            };
-
-            await onSave(transaction);
-          }}
         >
           Save Transaction
         </Button>

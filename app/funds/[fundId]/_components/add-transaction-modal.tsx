@@ -30,7 +30,12 @@ export default function AddTransactionModal({
         Add New Transaction
       </h2>
       <hr className='border-t border-flame' />
-      <AddTransactionForm onSave={onSave} />
+      <AddTransactionForm
+        onSave={async (data) => {
+          await onSave(data);
+          onClose();
+        }}
+      />
       {/* <div className='mt-2 space-y-4'>
         <NumericInput 
           id='transaction-amount'

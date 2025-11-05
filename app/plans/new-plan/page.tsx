@@ -6,6 +6,10 @@ import { PlanDetails, PlannedAllocation } from '../../lib/models/funds/plan.mode
 import { createPlan } from '../../lib/plans/plans';
 import { getActiveFunds } from '../../lib/funds/funds';
 import { FundDetails } from '../../lib/models/funds/fund.model';
+import TextInput from '@/components/form/inputs/text-input';
+import NumericInput from '@/components/form/inputs/numeric-input';
+import DatePickerInput from '@/components/form/inputs/date-picker-input';
+import TitledPageContainer from '@/components/containers/pages/titled-page-container';
 
 export default function NewPlanPage() {
   const router = useRouter();
@@ -187,109 +191,77 @@ export default function NewPlanPage() {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Create New Plan</h1>
-        <p className="mt-1 text-sm text-gray-600">
-          Fill in the details to create a new allocation plan
-        </p>
-      </div>
-
-      <form onSubmit={handleSubmit} className="space-y-6">
+    <TitledPageContainer
+      title="Create New Plan"
+      >
+        <form onSubmit={handleSubmit} className="space-y-6">
         {/* Plan Name */}
-        <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-            Plan Name <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className={`mt-1 block w-full rounded-md border ${
-              errors.name ? 'border-red-500' : 'border-gray-300'
-            } px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500`}
-            placeholder="Enter plan name"
-          />
-          {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
-        </div>
+        <TextInput
+          id='plan-name'
+          label='Name'
+          value={formData.name}
+          placeholder='Plan Name'
+          onChange={(newText) => setFormData((prev) => ({ ...prev, name: newText }))}
+          validations={{
+            required: true,
+            minLength: 3,
+            maxLength: 20,
+          }}
+        />
 
         {/* Total Amount */}
-        <div>
-          <label htmlFor="amount" className="block text-sm font-medium text-gray-700">
-            Total Amount <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="number"
-            id="amount"
-            name="amount"
-            value={formData.amount}
-            onChange={handleChange}
-            step="0.01"
-            min="0"
-            className={`mt-1 block w-full rounded-md border ${
-              errors.amount ? 'border-red-500' : 'border-gray-300'
-            } px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500`}
-            placeholder="0.00"
-          />
-          {errors.amount && <p className="mt-1 text-sm text-red-600">{errors.amount}</p>}
-        </div>
+        <NumericInput
+          id='amount'
+          label='Total Amount'
+          step='0.01'
+          placeholder='0.00'
+          value={formData.amount}
+          onChange={(newValue) => setFormData((prev) => ({ ...prev, amount: newValue }))}
+          validations={{
+            required: true,
+            min: 0,
+          }}
+        />
 
         {/* Expected Date */}
-        <div>
-          <label htmlFor="expectedDate" className="block text-sm font-medium text-gray-700">
-            Expected Date <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="date"
-            id="expectedDate"
-            name="expectedDate"
-            value={formData.expectedDate}
-            onChange={handleChange}
-            className={`mt-1 block w-full rounded-md border ${
-              errors.expectedDate ? 'border-red-500' : 'border-gray-300'
-            } px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500`}
-          />
-          {errors.expectedDate && (
-            <p className="mt-1 text-sm text-red-600">{errors.expectedDate}</p>
-          )}
-        </div>
+        <DatePickerInput
+          id='expectedDate'
+          label='Expected Date'
+          value={formData.expectedDate}
+          onChange={(newDate) => setFormData((prev) => ({ ...prev, expectedDate: newDate }))}
+          validations={{
+            required: true,
+          }}
+        />
 
         {/* Notes */}
-        <div>
-          <label htmlFor="notes" className="block text-sm font-medium text-gray-700">
-            Notes (Optional)
-          </label>
-          <textarea
-            id="notes"
-            name="notes"
-            value={formData.notes}
-            onChange={handleChange}
-            rows={3}
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-            placeholder="Enter any notes about this plan"
-          />
-        </div>
+        <TextInput 
+          id='notes'
+          label='Notes (Optional)'
+          value={formData.notes}
+          placeholder='Enter any notes about this plan'
+          onChange={(newText) => setFormData((prev) => ({ ...prev, notes: newText }))}
+          rows={3}
+        />
 
         {/* Allocations Section */}
-        <div className="border-t border-gray-200 pt-6">
+        <div className="border-t border-flame pt-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">
+            <h2 className="text-lg font-semibold text-midnight">
               Allocations <span className="text-red-500">*</span>
             </h2>
             <button
               type="button"
               onClick={addAllocation}
               disabled={isLoadingFunds}
-              className="px-3 py-1 text-sm font-medium text-blue-600 bg-blue-50 border border-blue-300 rounded-md hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-3 py-1 text-sm font-medium text-cream bg-flame border border-cream rounded-md hover:bg-flame-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-flame-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               + Add Allocation
             </button>
           </div>
 
           {isLoadingFunds ? (
-            <p className="text-sm text-gray-500">Loading funds...</p>
+            <p className="text-sm text-dusk">Loading funds...</p>
           ) : funds.length === 0 ? (
             <div className="rounded-md bg-yellow-50 p-4">
               <p className="text-sm text-yellow-800">
@@ -299,7 +271,7 @@ export default function NewPlanPage() {
           ) : (
             <>
               {allocations.length === 0 ? (
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-dusk">
                   No allocations added yet. Click &quot;Add Allocation&quot; to start.
                 </p>
               ) : (
@@ -307,10 +279,10 @@ export default function NewPlanPage() {
                   {allocations.map((allocation, index) => (
                     <div
                       key={index}
-                      className="p-4 border border-gray-200 rounded-md bg-gray-50"
+                      className="p-4 border border-platinum rounded-md bg-cream"
                     >
                       <div className="flex justify-between items-start mb-3">
-                        <h3 className="text-sm font-medium text-gray-700">
+                        <h3 className="text-sm font-medium text-midnight">
                           Allocation {index + 1}
                         </h3>
                         <button
@@ -451,6 +423,6 @@ export default function NewPlanPage() {
           </button>
         </div>
       </form>
-    </div>
+    </TitledPageContainer>
   );
 }

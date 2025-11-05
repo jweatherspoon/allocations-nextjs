@@ -1,5 +1,6 @@
 'use server';
 
+import { TransactionDetails } from '@/app/lib/models/funds/transaction.model';
 import { auth0, getUserId } from '../auth/auth0';
 import { FundDetails } from '../models/funds/fund.model';
 import { UserData } from '../models/userData.model';
@@ -96,6 +97,69 @@ export async function addFund(
         funds: [fundDetails],
       });
     }
+    return true;
+  } catch (error) {
+    console.error('Error adding fund:', error);
+    return false;
+  }
+}
+
+export async function addTransaction(
+  userId: string,
+  fundId: string,
+  transaction: TransactionDetails
+): Promise<boolean> {
+  const container = await getAllocationsDbContext();
+
+  try {
+    // Check if user document exists
+    const { resource: existingUser } = await container
+      .item(userId, userId)
+      .read();
+
+    if (existingUser) {
+      // User exists, add transaction to fund
+      let fundFound = false;
+      const updatedFunds = existingUser.funds.map((fund: FundDetails) => {
+        if (fund.id === fundId) {
+          fundFound = true;
+
+          // calculate the new current amount
+          let newCurrentAmount = fund.currentAmount;
+          if (
+            transaction.type === 'deposit' ||
+            transaction.type === 'transfer'
+          ) {
+            newCurrentAmount += transaction.value;
+          } else if (transaction.type === 'withdrawal') {
+            newCurrentAmount -= transaction.value;
+          }
+
+          return {
+            ...fund,
+            currentAmount: newCurrentAmount,
+            transactions: [...(fund.transactions || []), transaction],
+          };
+        }
+
+        return fund;
+      });
+
+      if (!fundFound) {
+        console.error('Fund not found when adding transaction');
+        return false;
+      }
+
+      await container.item(userId, userId).replace({
+        ...existingUser,
+        funds: updatedFunds,
+      });
+    } else {
+      // User doesn't exist, create new document
+      console.error('User not found when adding transaction');
+      return false;
+    }
+
     return true;
   } catch (error) {
     console.error('Error adding fund:', error);

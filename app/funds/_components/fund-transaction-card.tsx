@@ -1,4 +1,6 @@
-import { TransactionDetails, TransactionType } from '../../lib/models/funds/transaction.model';
+import StatusChip from '@/components/chip/status-chip';
+import { ChipStatus } from '@/models/status/chip-status.enum';
+import { TransactionDetails, TransactionType } from '@/app/lib/models/funds/transaction.model';
 
 export interface FundTransactionCardProps {
   transaction: TransactionDetails;
@@ -31,7 +33,7 @@ export default function FundTransactionCard({ transaction }: FundTransactionCard
   const colors = getTransactionColor(transaction.type);
 
   return (
-    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+    <div className="flex items-center justify-between p-3 bg-gray-50 border border-gray rounded-lg hover:bg-gray-100 transition-colors">
       <div className="flex items-center space-x-3">
         {/* Transaction type indicator */}
         <div className={`w-2 h-2 rounded-full ${colors.dot}`}></div>
@@ -42,11 +44,7 @@ export default function FundTransactionCard({ transaction }: FundTransactionCard
             {transaction.type}
           </p>
           <p className="text-xs text-gray-500">
-            {new Date(transaction.createdAt).toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'short',
-              day: 'numeric',
-            })}
+            {new Date(transaction.createdAt).toISOString().split('T')[0]}
           </p>
           {transaction.notes && (
             <p className="text-xs text-gray-600 mt-1 line-clamp-1">
@@ -58,10 +56,10 @@ export default function FundTransactionCard({ transaction }: FundTransactionCard
 
       {/* Amount and status */}
       <div className="text-right">
-        <p className={`text-sm font-medium ${colors.text}`}>
+        <StatusChip status={ChipStatus.SUCCESS} text={transaction.status} />
+        <p className={`text-sm font-medium ${colors.text} mr-3 mt-1`}>
           {colors.sign}${Math.abs(transaction.value).toLocaleString()}
         </p>
-        <p className="text-xs text-gray-500 capitalize">{transaction.status}</p>
       </div>
     </div>
   );

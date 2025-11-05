@@ -1,3 +1,4 @@
+import TitledPageContainer from '@/components/containers/pages/titled-page-container';
 import { getActiveFunds } from '../lib/funds/funds';
 
 import FundCard from './_components/fund-card';
@@ -7,10 +8,7 @@ export default async function ListFundsPage() {
   const activeFunds = await getActiveFunds();
 
   return (
-    <div className="space-y-4">
-      {/* {hierarchy.map((group) => (
-        <GroupExpander key={group.id} group={group} />
-      ))} */}
+    <TitledPageContainer title='Funds'>
       {activeFunds.length === 0 ? (
         <p className="text-gray-600">No active funds available.</p>
       ) : (
@@ -22,6 +20,6 @@ export default async function ListFundsPage() {
           ))}
         </div>
       )}
-    </div>
+    </TitledPageContainer>
   );
 }

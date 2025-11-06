@@ -6,23 +6,27 @@ import { PlanDetails } from '../../lib/models/funds/plan.model';
 import { createPlan } from '../../lib/plans/plans';
 import { getActiveFunds } from '../../lib/funds/funds';
 import { FundDetails } from '../../lib/models/funds/fund.model';
-import TextInput from '@/components/form/inputs/text-input';
-import NumericInput from '@/components/form/inputs/numeric-input';
-import DatePickerInput from '@/components/form/inputs/date-picker-input';
 import TitledPageContainer from '@/components/containers/pages/titled-page-container';
+import { useForm } from 'react-hook-form';
+import { ControlledDatePickerInput } from '@/components/form/inputs/controlled-date-picker-input';
+import { ControlledNumericInput } from '@/components/form/inputs/controlled-numeric-input';
+import { ControlledTextInput } from '@/components/form/inputs/controlled-text-input';
+import Button from '@/components/button/button';
 
 export default function NewPlanPage() {
   const router = useRouter();
-  const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [funds, setFunds] = useState<FundDetails[]>([]);
   const [isLoadingFunds, setIsLoadingFunds] = useState(true);
 
-  const [formData, setFormData] = useState({
-    name: '',
-    amount: '',
-    expectedDate: '',
-    notes: '',
+  const { control, handleSubmit, formState } = useForm({
+    mode: 'onChange',
+    defaultValues: {
+      name: '',
+      amount: '',
+      expectedDate: '',
+      notes: '',
+    },
   });
 
   useEffect(() => {
@@ -32,7 +36,6 @@ export default function NewPlanPage() {
         setFunds(activeFunds);
       } catch (error) {
         console.error('Error loading funds:', error);
-        setErrors({ funds: 'Failed to load funds' });
       } finally {
         setIsLoadingFunds(false);
       }
@@ -41,42 +44,22 @@ export default function NewPlanPage() {
     loadFunds();
   }, []);
 
-  const validateForm = (): boolean => {
-    const newErrors: Record<string, string> = {};
-
-    if (!formData.name.trim()) {
-      newErrors.name = 'Plan name is required';
-    }
-
-    if (!formData.amount || parseFloat(formData.amount) <= 0) {
-      newErrors.amount = 'Amount must be greater than 0';
-    }
-
-    if (!formData.expectedDate) {
-      newErrors.expectedDate = 'Expected date is required';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!validateForm()) {
-      return;
-    }
-
+  const onSubmit = async (data: {
+    name: string;
+    amount: string;
+    expectedDate: string;
+    notes: string;
+  }) => {
     setIsSubmitting(true);
 
     try {
       const newPlan: Partial<PlanDetails> = {
-        name: formData.name,
-        amount: parseFloat(formData.amount),
-        expectedDate: formData.expectedDate,
+        name: data.name,
+        amount: parseFloat(data.amount),
+        expectedDate: data.expectedDate,
         status: 'pending',
         allocations: [],
-        notes: formData.notes || undefined,
+        notes: data.notes || undefined,
       };
 
       await createPlan(newPlan);
@@ -84,7 +67,6 @@ export default function NewPlanPage() {
       router.back();
     } catch (error) {
       console.error('Error creating plan:', error);
-      setErrors({ submit: 'Failed to create plan. Please try again.' });
     } finally {
       setIsSubmitting(false);
     }
@@ -92,16 +74,14 @@ export default function NewPlanPage() {
 
   return (
     <TitledPageContainer title='Create New Plan'>
-      <form onSubmit={handleSubmit} className='space-y-6'>
+      <form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>
         {/* Plan Name */}
-        <TextInput
+        <ControlledTextInput
           id='plan-name'
+          name='name'
+          control={control}
           label='Name'
-          value={formData.name}
           placeholder='Plan Name'
-          onChange={(newText) =>
-            setFormData((prev) => ({ ...prev, name: newText }))
-          }
           validations={{
             required: true,
             minLength: 3,
@@ -110,15 +90,13 @@ export default function NewPlanPage() {
         />
 
         {/* Total Amount */}
-        <NumericInput
+        <ControlledNumericInput
           id='amount'
+          name='amount'
+          control={control}
           label='Total Amount'
           step='0.01'
           placeholder='0.00'
-          value={formData.amount}
-          onChange={(newValue) =>
-            setFormData((prev) => ({ ...prev, amount: newValue }))
-          }
           validations={{
             required: true,
             min: 0,
@@ -126,53 +104,46 @@ export default function NewPlanPage() {
         />
 
         {/* Expected Date */}
-        <DatePickerInput
+        <ControlledDatePickerInput
           id='expectedDate'
+          name='expectedDate'
+          control={control}
           label='Expected Date'
-          value={formData.expectedDate}
-          onChange={(newDate) =>
-            setFormData((prev) => ({ ...prev, expectedDate: newDate }))
-          }
           validations={{
             required: true,
           }}
         />
 
         {/* Notes */}
-        <TextInput
+        <ControlledTextInput
           id='notes'
+          name='notes'
+          control={control}
           label='Notes (Optional)'
-          value={formData.notes}
           placeholder='Enter any notes about this plan'
-          onChange={(newText) =>
-            setFormData((prev) => ({ ...prev, notes: newText }))
-          }
           rows={3}
         />
 
-        {/* Submit Error */}
-        {errors.submit && (
-          <div className='rounded-md bg-red-50 p-4'>
-            <p className='text-sm text-red-800'>{errors.submit}</p>
-          </div>
-        )}
-
         {/* Form Actions */}
         <div className='flex justify-end gap-3 pt-4 border-t border-gray-200'>
-          <button
+          <Button
             type='button'
             onClick={() => router.back()}
-            className='px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
+            className='bg-midnight'
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             type='submit'
-            disabled={isSubmitting || isLoadingFunds || funds.length === 0}
-            className='px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed'
+            disabled={
+              !formState.isValid ||
+              isSubmitting ||
+              isLoadingFunds ||
+              funds.length === 0
+            }
           >
             {isSubmitting ? 'Creating...' : 'Create Plan'}
-          </button>
+          </Button>
         </div>
       </form>
     </TitledPageContainer>

@@ -2,6 +2,7 @@ import { ProgressBar } from '@/components/progress/progress-bar';
 import { FundStatus } from '../../lib/models/funds/fund.model';
 import StatusChip from '@/components/chip/status-chip';
 import { ChipStatus } from '@/models/status/chip-status.enum';
+import { formatCurrency, formatDate } from '@/utils/format.utils';
 
 export interface FundCardProps {
   id: string;
@@ -9,59 +10,73 @@ export interface FundCardProps {
   description: string;
   currentAmount: number;
   targetAmount?: number;
+  targetDate?: string;
   status: FundStatus;
 }
 
 export default function FundCard(props: FundCardProps) {
-  const { name, description, targetAmount, currentAmount, status } = props;
-  const progressPercentage = targetAmount ? Math.min((currentAmount / targetAmount) * 100, 100) : 0;
+  const { name, description, targetAmount, currentAmount, status, targetDate } =
+    props;
+  const progressPercentage = targetAmount
+    ? Math.min((currentAmount / targetAmount) * 100, 100)
+    : 0;
+
+  const getStatus = (status: FundStatus) => {
+    const isOverdue = targetDate ? new Date(targetDate) < new Date() : false;
+
+    let statusText: string;
+    let chipStatus: ChipStatus;
+    switch (status) {
+      case 'active':
+        if (isOverdue) {
+          statusText = 'overdue';
+          chipStatus = ChipStatus.ERROR;
+        } else {
+          statusText = 'active';
+          chipStatus = ChipStatus.INFO;
+        }
+        break;
+
+      case 'archived':
+        statusText = 'archived';
+        chipStatus = ChipStatus.SUCCESS;
+        break;
+
+      default:
+        statusText = 'unknown';
+        chipStatus = ChipStatus.ERROR;
+        break;
+    }
+
+    return { statusText, chipStatus };
+  };
+
+  const { statusText, chipStatus } = getStatus(status);
+
+  const amountToDisplay = targetAmount
+    ? `${formatCurrency(currentAmount)} of ${formatCurrency(targetAmount)}`
+    : formatCurrency(currentAmount);
 
   return (
-    <div className="bg-white rounded-lg shadow-md border border-gray-200 p-4 sm:p-6 transition-shadow hover:shadow-lg">
-      {/* Header */}
-      <div className="flex items-start justify-between mb-3">
-        <h3 className="text-lg sm:text-xl font-semibold text-gray-900 line-clamp-2">{name}</h3>
-        <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-          status === 'active' 
-            ? 'bg-green-100 text-green-800' 
-            : 'bg-gray-100 text-gray-800'
-        }`}>
-          {status}
-        </span>
+    <div className='bg-cream rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow space-y-4'>
+      <div className='flex justify-between items-center'>
+        <h3 className='text-lg font-semibold text-midnight'>{name}</h3>
+        <StatusChip status={chipStatus} text={statusText} />
       </div>
 
-      {/* Description */}
-      <p className="text-sm sm:text-base text-gray-600 mb-4 line-clamp-3">{description}</p>
+      <div className='text-sm text-dusk line-clamp-3'>{description}</div>
 
-      {/* Progress section */}
-      {targetAmount && (
-        <div className="space-y-2">
-          <div className="flex justify-end items-center text-sm">
-            {/* <span className="text-gray-500">Progress</span> */}
-            <StatusChip status={ChipStatus.ERROR} text={`${progressPercentage.toFixed(1)}%`} />
-            {/* <span className="font-medium text-gray-900">{progressPercentage.toFixed(1)}%</span> */}
-          </div>
-          
-          {/* Progress bar */}
-          {/* <div className="w-full bg-gray-200 rounded-full h-2">
-            <div 
-              className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-              style={{ width: `${progressPercentage}%` }}
-            />
-          </div> */}
-          <ProgressBar progress={progressPercentage} />
-
-          {/* Amount info */}
-          <div className="flex justify-between items-center text-sm">
-            <span className="text-gray-500">
-              ${currentAmount.toLocaleString()} raised
-            </span>
-            <span className="text-gray-500">
-              of ${targetAmount.toLocaleString()}
-            </span>
-          </div>
+      <div className='space-y-2'>
+        {targetAmount && <ProgressBar progress={progressPercentage} />}
+        <div className='flex justify-between items-center'>
+          <span className='text-sm text-midnight'>
+            {targetDate ? formatDate(targetDate) : 'No target date'}
+          </span>
+          <span className='text-sm text-midnight font-semibold'>
+            {amountToDisplay}
+          </span>
         </div>
-      )}
+      </div>
     </div>
   );
 }

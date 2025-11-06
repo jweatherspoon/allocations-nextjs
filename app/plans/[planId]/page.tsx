@@ -1,12 +1,12 @@
 import { notFound } from 'next/navigation';
-import { executePlan, getPlanDetails } from '../../lib/plans/plans';
+import { getPlanDetails } from '../../lib/plans/plans';
 import { getActiveFunds } from '../../lib/funds/funds';
 import TitledPageContainer from '@/components/containers/pages/titled-page-container';
 import DetailsSectionContainer from '@/components/containers/sections/details-section-container';
 import StatusChip from '@/components/chip/status-chip';
 import { ChipStatus } from '@/models/status/chip-status.enum';
 import PlannedAllocationsSection from '@/app/plans/[planId]/_components/planned-allocations-section';
-import Button from '@/components/button/button';
+import { formatCurrency } from '@/utils/format.utils';
 
 export default async function PlanDetailsPage({
   params,
@@ -24,14 +24,6 @@ export default async function PlanDetailsPage({
 
   const fundDetails = await getActiveFunds();
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(amount);
-  };
-
-  const hasStatus = plan.status !== 'pending';
   const isOverdue = new Date(plan.expectedDate) < new Date();
   const status =
     plan.status === 'completed'
@@ -63,7 +55,7 @@ export default async function PlanDetailsPage({
               {new Date(plan.expectedDate).toISOString().split('T')[0]}
             </span>
           </h3>
-          {hasStatus && <StatusChip status={status} text={statusText} />}
+          <StatusChip status={status} text={statusText} />
         </div>
       </DetailsSectionContainer>
 

@@ -37,6 +37,7 @@ export default function PlannedAllocationsSection({
     100
   );
 
+  const canExecute = remainingAllocatableAmount === 0;
   const execute = async (planId: string) => {
     const success = await executePlan(planId);
     if (success) {
@@ -102,17 +103,22 @@ export default function PlannedAllocationsSection({
                 />
               ))
           ) : (
-            <p className='text-dusk'>No recent allocations found.</p>
+            <p className='text-dusk text-center mt-4'>
+              No recent allocations found.
+            </p>
           )}
         </div>
       </DetailsSectionContainer>
 
       {planDetails.status === 'pending' && (
         <Button
+          disabled={!canExecute}
           onClick={async () => await execute(planDetails.id)}
           className='mt-4 w-full'
         >
-          Execute Plan
+          {canExecute
+            ? 'Execute Plan'
+            : 'Cannot Execute: Incomplete Allocations'}
         </Button>
       )}
 

@@ -14,7 +14,7 @@ npm install react-hook-form
 
 ### 2. Created Controlled Wrapper Components
 
-Created three new wrapper components that bridge React Hook Form with your existing custom input components:
+Created four wrapper components that bridge React Hook Form with your existing custom input components:
 
 #### `controlled-numeric-input.tsx`
 
@@ -33,6 +33,12 @@ Created three new wrapper components that bridge React Hook Form with your exist
 - Wraps `TextInput` with React Hook Form's `useController`
 - Maps your custom `TextInputValidations` to React Hook Form's validation rules
 - Supports all text input features including multi-line (textarea)
+
+#### `controlled-date-picker-input.tsx`
+
+- Wraps `DatePickerInput` with React Hook Form's `useController`
+- Maps your custom `DatePickerInputValidations` to React Hook Form's validation rules
+- Handles date string parsing and validation with min/max date constraints
 
 ### 3. Updated `AddTransactionForm`
 
@@ -152,6 +158,7 @@ To migrate other forms in your application:
    import { ControlledNumericInput } from '@/components/form/inputs/controlled-numeric-input';
    import { ControlledSelectInput } from '@/components/form/inputs/controlled-select-input';
    import { ControlledTextInput } from '@/components/form/inputs/controlled-text-input';
+   import { ControlledDatePickerInput } from '@/components/form/inputs/controlled-date-picker-input';
    ```
 
 3. **Set up the form**:
@@ -170,6 +177,7 @@ To migrate other forms in your application:
    - Replace `<NumericInput>` with `<ControlledNumericInput>`
    - Replace `<SelectInput>` with `<ControlledSelectInput>`
    - Replace `<TextInput>` with `<ControlledTextInput>`
+   - Replace `<DatePickerInput>` with `<ControlledDatePickerInput>`
 
 5. **Add `name` and `control` props**:
 

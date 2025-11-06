@@ -1,10 +1,12 @@
 'use server';
 
+import { Container, CosmosClient, Database, SqlQuerySpec } from '@azure/cosmos';
+
 import { TransactionDetails } from '@/lib/models/funds/transaction.model';
+
 import { auth0, getUserId } from '../auth/auth0';
 import { FundDetails } from '../models/funds/fund.model';
 import { UserData } from '../models/userData.model';
-import { Container, CosmosClient, Database, SqlQuerySpec } from '@azure/cosmos';
 
 async function getCosmosDBClient(): Promise<CosmosClient> {
   const endpoint = process.env.COSMOS_DB_ENDPOINT || '';

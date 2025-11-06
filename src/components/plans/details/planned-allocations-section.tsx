@@ -1,15 +1,18 @@
 'use client';
 
-import { FundDetails } from '@/lib/models/funds/fund.model';
-import { PlanDetails } from '@/lib/models/funds/plan.model';
-import { addAllocationToPlan, executePlan } from '@/lib/plans/plans';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+
+import AddAllocationModal from '@/components/plans/details/add-allocation-modal';
+import AllocationDetailsCard from '@/components/plans/details/allocation-details-card';
 import Button from '@/components/shared/button/button';
 import DetailsSectionContainer from '@/components/shared/containers/sections/details-section-container';
 import { ProgressBar } from '@/components/shared/progress/progress-bar';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import AllocationDetailsCard from '@/components/plans/details/allocation-details-card';
-import AddAllocationModal from '@/components/plans/details/add-allocation-modal';
+import { FundDetails } from '@/lib/models/funds/fund.model';
+import { PlanDetails } from '@/lib/models/funds/plan.model';
+import { addAllocationToPlan, executePlan } from '@/lib/plans/plans';
+
+
 
 export default function PlannedAllocationsSection({
   planDetails,

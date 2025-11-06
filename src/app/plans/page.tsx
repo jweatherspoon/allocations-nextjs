@@ -1,7 +1,9 @@
-import TitledPageContainer from '@/components/shared/containers/pages/titled-page-container';
-import { getAllPlans } from '../../lib/plans/plans';
-import { PlanDetailsCard } from '../../components/plans/list/plan-details-card';
 import Link from 'next/link';
+
+import TitledPageContainer from '@/components/shared/containers/pages/titled-page-container';
+
+import { PlanDetailsCard } from '../../components/plans/list/plan-details-card';
+import { getAllPlans } from '../../lib/plans/plans';
 
 export default async function PlansPage() {
   const plans = await getAllPlans();

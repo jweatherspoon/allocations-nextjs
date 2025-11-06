@@ -2,8 +2,9 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import { useMemo } from 'react';
-import NavButton from './nav-button';
+
 import ActionButton from './action-button';
+import NavButton from './nav-button';
 import { NAV_ITEMS, getActionForRoute } from './nav-config';
 
 export default function BottomNav() {

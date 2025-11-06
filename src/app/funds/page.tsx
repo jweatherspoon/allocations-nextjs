@@ -1,8 +1,9 @@
+import Link from 'next/link';
+
+import FundCard from '@/components/funds/list/fund-card';
 import TitledPageContainer from '@/components/shared/containers/pages/titled-page-container';
 import { getActiveFunds } from '@/lib/funds/funds';
 
-import FundCard from '@/components/funds/list/fund-card';
-import Link from 'next/link';
 
 export default async function ListFundsPage() {
   const funds = await getActiveFunds();

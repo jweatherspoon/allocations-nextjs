@@ -1,9 +1,9 @@
 import StatusChip from '@/components/shared/chip/status-chip';
-import { ChipStatus } from '@/models/status/chip-status.enum';
 import {
   TransactionDetails,
   TransactionType,
 } from '@/lib/models/funds/transaction.model';
+import { ChipStatus } from '@/models/status/chip-status.enum';
 
 export interface FundTransactionCardProps {
   transaction: TransactionDetails;

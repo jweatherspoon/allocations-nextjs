@@ -1,12 +1,13 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
+
 import Button from '@/components/shared/button/button';
 import { ControlledNumericInput } from '@/components/shared/form/inputs/controlled-numeric-input';
 import { ControlledSelectInput } from '@/components/shared/form/inputs/controlled-select-input';
 import { ControlledTextInput } from '@/components/shared/form/inputs/controlled-text-input';
-import { PlannedAllocation } from '@/lib/models/funds/plan.model';
 import { FundDetails } from '@/lib/models/funds/fund.model';
+import { PlannedAllocation } from '@/lib/models/funds/plan.model';
 
 interface AllocationFormData {
   amount: string;

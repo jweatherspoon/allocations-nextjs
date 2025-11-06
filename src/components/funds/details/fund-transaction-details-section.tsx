@@ -1,11 +1,12 @@
 'use client';
 
+import { useState } from 'react';
+
 import AddTransactionModal from '@/components/funds/details/add-transaction-modal';
 import FundTransactionCard from '@/components/funds/details/fund-transaction-card';
+import DetailsSectionContainer from '@/components/shared/containers/sections/details-section-container';
 import { addTransactionToFund } from '@/lib/funds/funds';
 import { FundDetails } from '@/lib/models/funds/fund.model';
-import DetailsSectionContainer from '@/components/shared/containers/sections/details-section-container';
-import { useState } from 'react';
 
 export default function FundTransactionDetailsSection({
   fundDetails,

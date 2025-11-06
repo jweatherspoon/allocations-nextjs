@@ -1,12 +1,14 @@
 import { notFound } from 'next/navigation';
-import { getPlanDetails } from '../../../lib/plans/plans';
-import { getActiveFunds } from '../../../lib/funds/funds';
+
+import PlannedAllocationsSection from '@/components/plans/details/planned-allocations-section';
+import StatusChip from '@/components/shared/chip/status-chip';
 import TitledPageContainer from '@/components/shared/containers/pages/titled-page-container';
 import DetailsSectionContainer from '@/components/shared/containers/sections/details-section-container';
-import StatusChip from '@/components/shared/chip/status-chip';
 import { ChipStatus } from '@/models/status/chip-status.enum';
 import { formatCurrency } from '@/utils/format.utils';
-import PlannedAllocationsSection from '@/components/plans/details/planned-allocations-section';
+
+import { getActiveFunds } from '../../../lib/funds/funds';
+import { getPlanDetails } from '../../../lib/plans/plans';
 
 export default async function PlanDetailsPage({
   params,

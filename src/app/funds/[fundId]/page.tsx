@@ -1,11 +1,12 @@
+import { notFound } from 'next/navigation';
+
 import FundTransactionDetailsSection from '@/components/funds/details/fund-transaction-details-section';
-import { getFundDetails } from '@/lib/funds/funds';
 import StatusChip from '@/components/shared/chip/status-chip';
 import TitledPageContainer from '@/components/shared/containers/pages/titled-page-container';
 import DetailsSectionContainer from '@/components/shared/containers/sections/details-section-container';
 import { ProgressBar } from '@/components/shared/progress/progress-bar';
+import { getFundDetails } from '@/lib/funds/funds';
 import { ChipStatus } from '@/models/status/chip-status.enum';
-import { notFound } from 'next/navigation';
 
 export default async function FundDetailsPage({
   params,

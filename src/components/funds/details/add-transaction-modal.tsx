@@ -1,12 +1,12 @@
 'use client';
 
 import AddTransactionForm from '@/components/funds/details/add-transaction-form';
+import ModalContainer from '@/components/shared/modal/modal-container';
 import { TransactionDetails } from '@/lib/models/funds/transaction.model';
 // import Button from '@/components/button/button';
 // import NumericInput from '@/components/form/inputs/numeric-input';
 // import SelectInput from '@/components/form/inputs/select-input';
 // import TextInput from '@/components/form/inputs/text-input';
-import ModalContainer from '@/components/shared/modal/modal-container';
 // import { useState } from 'react';
 
 export default function AddTransactionModal({

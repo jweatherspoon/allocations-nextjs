@@ -1,11 +1,10 @@
 'use server';
 
+import { getUserId } from '@/lib/auth/auth0';
+import { getUserData, getAllocationsDbContext } from '@/lib/db/db-context';
 import { FundDetails } from '@/lib/models/funds/fund.model';
+import { PlanDetails, PlannedAllocation } from '@/lib/models/funds/plan.model';
 import { TransactionDetails } from '@/lib/models/funds/transaction.model';
-
-import { getUserId } from '../auth/auth0';
-import { getAllocationsDbContext, getUserData } from '../db/db-context';
-import { PlanDetails, PlannedAllocation } from '../models/funds/plan.model';
 
 export async function getAllPlans(): Promise<PlanDetails[]> {
   const userData = await getUserData();

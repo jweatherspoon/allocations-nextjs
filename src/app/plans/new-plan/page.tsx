@@ -9,14 +9,10 @@ import TitledPageContainer from '@/components/shared/containers/pages/titled-pag
 import { ControlledDatePickerInput } from '@/components/shared/form/inputs/controlled-date-picker-input';
 import { ControlledNumericInput } from '@/components/shared/form/inputs/controlled-numeric-input';
 import { ControlledTextInput } from '@/components/shared/form/inputs/controlled-text-input';
-
-import { getActiveFunds } from '../../../lib/funds/funds';
-import { FundDetails } from '../../../lib/models/funds/fund.model';
-import { PlanDetails } from '../../../lib/models/funds/plan.model';
-import { createPlan } from '../../../lib/plans/plans';
-
-
-
+import { getActiveFunds } from '@/lib/funds/funds';
+import { FundDetails } from '@/lib/models/funds/fund.model';
+import { PlanDetails } from '@/lib/models/funds/plan.model';
+import { createPlan } from '@/lib/plans/plans';
 
 export default function NewPlanPage() {
   const router = useRouter();

@@ -9,9 +9,8 @@ import TitledPageContainer from '@/components/shared/containers/pages/titled-pag
 import { ControlledDatePickerInput } from '@/components/shared/form/inputs/controlled-date-picker-input';
 import { ControlledNumericInput } from '@/components/shared/form/inputs/controlled-numeric-input';
 import { ControlledTextInput } from '@/components/shared/form/inputs/controlled-text-input';
-
-import { createFund } from '../../../lib/funds/funds';
-import { FundDetails, FundStatus } from '../../../lib/models/funds/fund.model';
+import { createFund } from '@/lib/funds/funds';
+import { FundDetails, FundStatus } from '@/lib/models/funds/fund.model';
 
 export default function NewFundPage() {
   const router = useRouter();

@@ -4,11 +4,10 @@ import PlannedAllocationsSection from '@/components/plans/details/planned-alloca
 import StatusChip from '@/components/shared/chip/status-chip';
 import TitledPageContainer from '@/components/shared/containers/pages/titled-page-container';
 import DetailsSectionContainer from '@/components/shared/containers/sections/details-section-container';
+import { getActiveFunds } from '@/lib/funds/funds';
+import { getPlanDetails } from '@/lib/plans/plans';
 import { ChipStatus } from '@/models/status/chip-status.enum';
 import { formatCurrency } from '@/utils/format.utils';
-
-import { getActiveFunds } from '../../../lib/funds/funds';
-import { getPlanDetails } from '../../../lib/plans/plans';
 
 export default async function PlanDetailsPage({
   params,

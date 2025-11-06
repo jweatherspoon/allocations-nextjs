@@ -1,15 +1,14 @@
 'use server';
 
-import { TransactionDetails } from '@/lib/models/funds/transaction.model';
-
-import { getUserId } from '../auth/auth0';
+import { getUserId } from '@/lib/auth/auth0';
 import {
   addFund,
   addTransaction,
   fetchFundDetails,
   getUserData,
-} from '../db/db-context';
-import { FundDetails } from '../models/funds/fund.model';
+} from '@/lib/db/db-context';
+import { FundDetails } from '@/lib/models/funds/fund.model';
+import { TransactionDetails } from '@/lib/models/funds/transaction.model';
 
 export async function getActiveFunds(): Promise<FundDetails[]> {
   const userData = await getUserData();

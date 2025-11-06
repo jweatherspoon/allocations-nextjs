@@ -22,6 +22,7 @@ export function ControlledNumericInput<T extends FieldValues>({
 }: ControlledNumericInputProps<T>) {
   const {
     field: { value, onChange },
+    fieldState: { error },
   } = useController({
     name,
     control,
@@ -53,10 +54,9 @@ export function ControlledNumericInput<T extends FieldValues>({
     <NumericInput
       {...props}
       value={value || ''}
-      onChange={(val) => {
-        onChange(val);
-      }}
+      onChange={onChange}
       validations={validations}
+      error={error?.message}
     />
   );
 }

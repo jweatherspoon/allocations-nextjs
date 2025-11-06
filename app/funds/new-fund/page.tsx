@@ -5,98 +5,69 @@ import { useRouter } from 'next/navigation';
 import { FundDetails, FundStatus } from '../../lib/models/funds/fund.model';
 import { createFund } from '../../lib/funds/funds';
 import TitledPageContainer from '@/components/containers/pages/titled-page-container';
-import TextInput from '@/components/form/inputs/text-input';
-import NumericInput from '@/components/form/inputs/numeric-input';
-import DatePickerInput from '@/components/form/inputs/date-picker-input';
+import { ControlledNumericInput } from '@/components/form/inputs/controlled-numeric-input';
+import { ControlledTextInput } from '@/components/form/inputs/controlled-text-input';
+import { ControlledDatePickerInput } from '@/components/form/inputs/controlled-date-picker-input';
+import { useForm } from 'react-hook-form';
+import Button from '@/components/button/button';
 
 export default function NewFundPage() {
   const router = useRouter();
-  const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    targetAmount: '',
-    targetDate: '',
+  const { control, handleSubmit, formState } = useForm({
+    mode: 'onChange',
+    defaultValues: {
+      name: '',
+      description: '',
+      targetAmount: '',
+      targetDate: '',
+    },
   });
 
-  const validateForm = (): boolean => {
-    const newErrors: Record<string, string> = {};
-
-    if (!formData.name.trim()) {
-      newErrors.name = 'Fund name is required';
-    }
-
-    if (!formData.description.trim()) {
-      newErrors.description = 'Description is required';
-    }
-
-    if (formData.targetAmount && parseFloat(formData.targetAmount) < 0) {
-      newErrors.targetAmount = 'Target amount cannot be negative';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!validateForm()) {
-      return;
-    }
-
+  const onSubmit = async (data: {
+    name: string;
+    description: string;
+    targetAmount: string;
+    targetDate: string;
+  }) => {
     setIsSubmitting(true);
 
     try {
-      // TODO: Replace with actual API call
       const newFund: Partial<FundDetails> = {
-        name: formData.name,
-        description: formData.description,
+        name: data.name,
+        description: data.description,
         status: 'active' as FundStatus,
         currentAmount: 0,
-        targetAmount: formData.targetAmount ? parseFloat(formData.targetAmount) : undefined,
-        targetDate: formData.targetDate || undefined,
+        targetAmount: data.targetAmount
+          ? parseFloat(data.targetAmount)
+          : undefined,
+        targetDate: data.targetDate || undefined,
         transactions: [],
       };
 
       await createFund(newFund);
-      
+
       router.back();
     } catch (error) {
       console.error('Error creating fund:', error);
-      setErrors({ submit: 'Failed to create fund. Please try again.' });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    
-    // Clear error for this field
-    if (errors[name]) {
-      setErrors((prev) => {
-        const newErrors = { ...prev };
-        delete newErrors[name];
-        return newErrors;
-      });
-    }
-  };
-
   return (
-    <TitledPageContainer title="Create New Fund" subtitle="Set up a new fund to start tracking your savings goals.">
-      <form onSubmit={handleSubmit} className="space-y-6">
+    <TitledPageContainer
+      title='Create New Fund'
+      subtitle='Set up a new fund to start tracking your savings goals.'
+    >
+      <form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>
         {/* Fund Name */}
-        <TextInput
+        <ControlledTextInput
           id='name'
+          name='name'
+          control={control}
           label='Fund Name'
-          value={formData.name}
-          onChange={(newValue) => setFormData((prev) => ({ ...prev, name: newValue }))}
           placeholder='Enter fund name'
           validations={{
             required: true,
@@ -106,60 +77,52 @@ export default function NewFundPage() {
         />
 
         {/* Description */}
-        <TextInput
+        <ControlledTextInput
           id='description'
+          name='description'
+          control={control}
           label='Description'
-          value={formData.description}
-          onChange={(newValue) => setFormData((prev) => ({ ...prev, description: newValue }))}
           placeholder='Enter fund description'
           rows={3}
           validations={{
             required: true,
-            minLength: 10,
-            maxLength: 200,
+            minLength: 3,
+            maxLength: 120,
           }}
         />
 
         {/* Target Amount (Optional) */}
-        <NumericInput
+        <ControlledNumericInput
           id='targetAmount'
+          name='targetAmount'
           label='Target Amount (Optional)'
-          value={formData.targetAmount}
-          onChange={(newValue) => setFormData((prev) => ({ ...prev, targetAmount: newValue }))}
+          control={control}
           placeholder='0.00'
+          validations={{
+            min: 0.01,
+          }}
         />
 
         {/* Target Date (Optional) */}
-        <DatePickerInput 
+        <ControlledDatePickerInput
           id='targetDate'
+          name='targetDate'
+          control={control}
           label='Target Date (Optional)'
-          value={formData.targetDate}
-          onChange={(newValue) => setFormData((prev) => ({ ...prev, targetDate: newValue }))}
         />
 
-        {/* Submit Error */}
-        {errors.submit && (
-          <div className="rounded-md bg-red-50 p-4">
-            <p className="text-sm text-red-800">{errors.submit}</p>
-          </div>
-        )}
-
         {/* Form Actions */}
-        <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
-          <button
-            type="button"
+        <div className='flex justify-end gap-3 pt-4 border-t border-gray-200'>
+          <Button
+            type='button'
             onClick={() => router.back()}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            className='bg-midnight'
           >
             Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
+          </Button>
+          <Button type='submit' disabled={!formState.isValid || isSubmitting}>
             {isSubmitting ? 'Creating...' : 'Create Fund'}
-          </button>
+          </Button>
         </div>
       </form>
     </TitledPageContainer>

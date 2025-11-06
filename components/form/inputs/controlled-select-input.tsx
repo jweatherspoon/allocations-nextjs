@@ -22,6 +22,7 @@ export function ControlledSelectInput<T extends FieldValues>({
 }: ControlledSelectInputProps<T>) {
   const {
     field: { value, onChange },
+    fieldState: { error },
   } = useController({
     name,
     control,
@@ -45,6 +46,7 @@ export function ControlledSelectInput<T extends FieldValues>({
         onChange(val);
       }}
       validations={validations}
+      error={error?.message}
     />
   );
 }

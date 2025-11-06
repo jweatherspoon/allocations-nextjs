@@ -22,6 +22,7 @@ export function ControlledTextInput<T extends FieldValues>({
 }: ControlledTextInputProps<T>) {
   const {
     field: { value, onChange },
+    fieldState: { error },
   } = useController({
     name,
     control,
@@ -63,6 +64,7 @@ export function ControlledTextInput<T extends FieldValues>({
         onChange(val);
       }}
       validations={validations}
+      error={error?.message}
     />
   );
 }

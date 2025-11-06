@@ -1,8 +1,12 @@
 'use server';
 
+import { addTransactionToFund } from '@/app/lib/funds/funds';
 import { getUserId } from '../auth/auth0';
 import { getAllocationsDbContext, getUserData } from '../db/db-context';
 import { PlanDetails, PlannedAllocation } from '../models/funds/plan.model';
+import { FundDetails } from '@/app/lib/models/funds/fund.model';
+import { TransactionDetails } from '@/app/lib/models/funds/transaction.model';
+import { Container } from '@azure/cosmos';
 
 export async function getAllPlans(): Promise<PlanDetails[]> {
   const userData = await getUserData();
@@ -127,6 +131,78 @@ export async function addAllocationToPlan(
     return true;
   } catch (error) {
     console.error('Error adding allocation:', error);
+    return false;
+  }
+}
+
+export async function executePlan(planId: string): Promise<boolean> {
+  const userData = await getUserData();
+  if (!userData) {
+    console.error('Failed to execute plan: User data not found');
+    return false;
+  }
+
+  const plan = userData?.plans?.find((p) => p.id === planId);
+
+  if (!plan) {
+    console.error('Failed to execute plan: Plan not found');
+    return false;
+  }
+
+  const newFunds = structuredClone(userData.funds) as FundDetails[];
+  const allocationToFundsMap = new Map<string, FundDetails>();
+  for (const alloc of plan.allocations) {
+    const fund = newFunds?.find((f) => f.id === alloc.targetFundId);
+    if (fund) {
+      allocationToFundsMap.set(alloc.targetFundId, fund);
+    }
+  }
+
+  for (const alloc of plan.allocations) {
+    const fund = allocationToFundsMap.get(alloc.targetFundId);
+    if (fund) {
+      const transaction: TransactionDetails = {
+        id: alloc.id,
+        createdAt: alloc.createdAt,
+        modifiedAt: new Date().toISOString(),
+        value: alloc.value,
+        type: 'deposit',
+        status: 'completed',
+        notes: `Allocation from "${plan.name}"`,
+      };
+
+      fund.transactions.push(transaction);
+      fund.currentAmount += alloc.value;
+    }
+  }
+
+  const newPlans = userData.plans!.map((p: PlanDetails) => {
+    if (p.id === planId) {
+      return {
+        ...p,
+        status: 'completed',
+        allocations: p.allocations.map((alloc) => ({
+          ...alloc,
+          status: 'completed',
+        })),
+      };
+    }
+
+    return p;
+  });
+
+  const userId = userData.id;
+  try {
+    const container = await getAllocationsDbContext();
+    await container.item(userId, userId).replace({
+      ...userData,
+      funds: newFunds,
+      plans: newPlans,
+    });
+
+    return true;
+  } catch (error) {
+    console.error(`Error executing plan ${plan.name} [${planId}]:`, error);
     return false;
   }
 }

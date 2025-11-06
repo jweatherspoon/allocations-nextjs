@@ -1,13 +1,14 @@
 'use client';
 
-import FundTransactionCard from '@/app/funds/_components/fund-transaction-card';
 import { FundDetails } from '@/app/lib/models/funds/fund.model';
 import { PlanDetails } from '@/app/lib/models/funds/plan.model';
-import { addAllocationToPlan } from '@/app/lib/plans/plans';
+import { addAllocationToPlan, executePlan } from '@/app/lib/plans/plans';
 import AddAllocationModal from '@/app/plans/[planId]/_components/add-allocation-modal';
 import AllocationDetailsCard from '@/app/plans/[planId]/_components/allocation-details-card';
+import Button from '@/components/button/button';
 import DetailsSectionContainer from '@/components/containers/sections/details-section-container';
 import { ProgressBar } from '@/components/progress/progress-bar';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export default function PlannedAllocationsSection({
@@ -17,6 +18,7 @@ export default function PlannedAllocationsSection({
   planDetails: PlanDetails;
   activeFunds: FundDetails[];
 }) {
+  const router = useRouter();
   const [newAllocations, setNewAllocations] = useState(
     planDetails.allocations || []
   );
@@ -34,6 +36,16 @@ export default function PlannedAllocationsSection({
     (totalAllocatedAmount / planDetails.amount) * 100,
     100
   );
+
+  const execute = async (planId: string) => {
+    const success = await executePlan(planId);
+    if (success) {
+      // Handle successful execution (e.g., show a success message)
+      router.refresh();
+    } else {
+      // Handle failed execution (e.g., show an error message)
+    }
+  };
 
   return (
     <div>
@@ -94,6 +106,16 @@ export default function PlannedAllocationsSection({
           )}
         </div>
       </DetailsSectionContainer>
+
+      {planDetails.status === 'pending' && (
+        <Button
+          onClick={async () => await execute(planDetails.id)}
+          className='mt-4 w-full'
+        >
+          Execute Plan
+        </Button>
+      )}
+
       <AddAllocationModal
         activeFunds={activeFunds}
         remainingAllocatableAmount={remainingAllocatableAmount}

@@ -63,8 +63,6 @@ export default function FundTransactionDetailsSection({
         isOpen={isTransactionModalOpen}
         onClose={() => setIsTransactionModalOpen(false)}
         onSave={async (data) => {
-          // Here you would typically send the new transaction to your backend or update state
-          console.log('New Transaction Data:', data);
           const success = await addTransactionToFund(fundDetails.id, data);
           if (!success) {
             console.error('Failed to add transaction');

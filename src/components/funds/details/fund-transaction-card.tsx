@@ -2,7 +2,7 @@ import StatusChip from '@/components/shared/chip/status-chip';
 import {
   TransactionDetails,
   TransactionType,
-} from '@/lib/models/funds/transaction.model';
+} from '@/models/funds/transaction.model';
 import { ChipStatus } from '@/models/status/chip-status.enum';
 
 export interface FundTransactionCardProps {

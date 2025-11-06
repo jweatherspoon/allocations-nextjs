@@ -10,9 +10,9 @@ import { ControlledDatePickerInput } from '@/components/shared/form/inputs/contr
 import { ControlledNumericInput } from '@/components/shared/form/inputs/controlled-numeric-input';
 import { ControlledTextInput } from '@/components/shared/form/inputs/controlled-text-input';
 import { getActiveFunds } from '@/lib/funds/funds';
-import { FundDetails } from '@/lib/models/funds/fund.model';
-import { PlanDetails } from '@/lib/models/funds/plan.model';
 import { createPlan } from '@/lib/plans/plans';
+import { FundDetails } from '@/models/funds/fund.model';
+import { PlanDetails } from '@/models/funds/plan.model';
 
 export default function NewPlanPage() {
   const router = useRouter();

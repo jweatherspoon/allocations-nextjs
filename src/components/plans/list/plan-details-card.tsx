@@ -1,6 +1,6 @@
 import StatusChip from '@/components/shared/chip/status-chip';
 import { ProgressBar } from '@/components/shared/progress/progress-bar';
-import { PlanDetails } from '@/lib/models/funds/plan.model';
+import { PlanDetails } from '@/models/funds/plan.model';
 import { ChipStatus } from '@/models/status/chip-status.enum';
 import { formatCurrency, formatDate } from '@/utils/format.utils';
 

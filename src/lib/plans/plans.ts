@@ -2,9 +2,9 @@
 
 import { getUserId } from '@/lib/auth/auth0';
 import { getUserData, getAllocationsDbContext } from '@/lib/db/db-context';
-import { FundDetails } from '@/lib/models/funds/fund.model';
-import { PlanDetails, PlannedAllocation } from '@/lib/models/funds/plan.model';
-import { TransactionDetails } from '@/lib/models/funds/transaction.model';
+import { FundDetails } from '@/models/funds/fund.model';
+import { PlanDetails, PlannedAllocation } from '@/models/funds/plan.model';
+import { TransactionDetails } from '@/models/funds/transaction.model';
 
 export async function getAllPlans(): Promise<PlanDetails[]> {
   const userData = await getUserData();

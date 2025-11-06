@@ -2,7 +2,7 @@
 
 import AddTransactionForm from '@/components/funds/details/add-transaction-form';
 import ModalContainer from '@/components/shared/modal/modal-container';
-import { TransactionDetails } from '@/lib/models/funds/transaction.model';
+import { TransactionDetails } from '@/models/funds/transaction.model';
 
 export default function AddTransactionModal({
   isOpen,

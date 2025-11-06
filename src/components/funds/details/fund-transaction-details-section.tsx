@@ -6,7 +6,7 @@ import AddTransactionModal from '@/components/funds/details/add-transaction-moda
 import FundTransactionCard from '@/components/funds/details/fund-transaction-card';
 import DetailsSectionContainer from '@/components/shared/containers/sections/details-section-container';
 import { addTransactionToFund } from '@/lib/funds/funds';
-import { FundDetails } from '@/lib/models/funds/fund.model';
+import { FundDetails } from '@/models/funds/fund.model';
 
 export default function FundTransactionDetailsSection({
   fundDetails,

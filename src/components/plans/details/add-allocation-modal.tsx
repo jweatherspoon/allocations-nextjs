@@ -2,8 +2,8 @@
 
 import AddAllocationForm from '@/components/plans/details/add-allocation-form';
 import ModalContainer from '@/components/shared/modal/modal-container';
-import { FundDetails } from '@/lib/models/funds/fund.model';
-import { PlannedAllocation } from '@/lib/models/funds/plan.model';
+import { FundDetails } from '@/models/funds/fund.model';
+import { PlannedAllocation } from '@/models/funds/plan.model';
 
 export default function AddAllocationModal({
   isOpen,

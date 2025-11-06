@@ -10,7 +10,7 @@ import { ControlledDatePickerInput } from '@/components/shared/form/inputs/contr
 import { ControlledNumericInput } from '@/components/shared/form/inputs/controlled-numeric-input';
 import { ControlledTextInput } from '@/components/shared/form/inputs/controlled-text-input';
 import { createFund } from '@/lib/funds/funds';
-import { FundDetails, FundStatus } from '@/lib/models/funds/fund.model';
+import { FundDetails, FundStatus } from '@/models/funds/fund.model';
 
 export default function NewFundPage() {
   const router = useRouter();

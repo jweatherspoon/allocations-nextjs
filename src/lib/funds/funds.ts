@@ -7,8 +7,8 @@ import {
   fetchFundDetails,
   getUserData,
 } from '@/lib/db/db-context';
-import { FundDetails } from '@/lib/models/funds/fund.model';
-import { TransactionDetails } from '@/lib/models/funds/transaction.model';
+import { FundDetails } from '@/models/funds/fund.model';
+import { TransactionDetails } from '@/models/funds/transaction.model';
 
 export async function getActiveFunds(): Promise<FundDetails[]> {
   const userData = await getUserData();

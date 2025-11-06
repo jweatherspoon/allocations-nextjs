@@ -6,7 +6,7 @@ import Button from '@/components/shared/button/button';
 import { ControlledNumericInput } from '@/components/shared/form/inputs/controlled-numeric-input';
 import { ControlledSelectInput } from '@/components/shared/form/inputs/controlled-select-input';
 import { ControlledTextInput } from '@/components/shared/form/inputs/controlled-text-input';
-import { TransactionDetails } from '@/lib/models/funds/transaction.model';
+import { TransactionDetails } from '@/models/funds/transaction.model';
 
 interface TransactionFormData {
   amount: string;

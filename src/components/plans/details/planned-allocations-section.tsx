@@ -8,11 +8,9 @@ import AllocationDetailsCard from '@/components/plans/details/allocation-details
 import Button from '@/components/shared/button/button';
 import DetailsSectionContainer from '@/components/shared/containers/sections/details-section-container';
 import { ProgressBar } from '@/components/shared/progress/progress-bar';
-import { FundDetails } from '@/lib/models/funds/fund.model';
-import { PlanDetails } from '@/lib/models/funds/plan.model';
 import { addAllocationToPlan, executePlan } from '@/lib/plans/plans';
-
-
+import { FundDetails } from '@/models/funds/fund.model';
+import { PlanDetails } from '@/models/funds/plan.model';
 
 export default function PlannedAllocationsSection({
   planDetails,

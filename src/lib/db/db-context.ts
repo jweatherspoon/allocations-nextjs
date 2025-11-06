@@ -3,9 +3,9 @@
 import { Container, CosmosClient, Database, SqlQuerySpec } from '@azure/cosmos';
 
 import { auth0, getUserId } from '@/lib/auth/auth0';
-import { FundDetails } from '@/lib/models/funds/fund.model';
-import { TransactionDetails } from '@/lib/models/funds/transaction.model';
-import { UserData } from '@/lib/models/userData.model';
+import { FundDetails } from '@/models/funds/fund.model';
+import { TransactionDetails } from '@/models/funds/transaction.model';
+import { UserData } from '@/models/user/userData.model';
 
 async function getCosmosDBClient(): Promise<CosmosClient> {
   const endpoint = process.env.COSMOS_DB_ENDPOINT || '';

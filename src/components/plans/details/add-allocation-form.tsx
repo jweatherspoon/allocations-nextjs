@@ -6,8 +6,8 @@ import Button from '@/components/shared/button/button';
 import { ControlledNumericInput } from '@/components/shared/form/inputs/controlled-numeric-input';
 import { ControlledSelectInput } from '@/components/shared/form/inputs/controlled-select-input';
 import { ControlledTextInput } from '@/components/shared/form/inputs/controlled-text-input';
-import { FundDetails } from '@/lib/models/funds/fund.model';
-import { PlannedAllocation } from '@/lib/models/funds/plan.model';
+import { FundDetails } from '@/models/funds/fund.model';
+import { PlannedAllocation } from '@/models/funds/plan.model';
 
 interface AllocationFormData {
   amount: string;

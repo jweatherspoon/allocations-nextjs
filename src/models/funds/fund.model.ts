@@ -1,4 +1,4 @@
-import { TransactionDetails } from './transaction.model';
+import { TransactionDetails } from '@/models/funds/transaction.model';
 
 export type FundStatus = 'active' | 'archived' | 'pending';
 

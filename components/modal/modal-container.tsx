@@ -26,7 +26,7 @@ export default function ModalContainer({
     };
 
     document.addEventListener('keydown', handleEscape);
-    
+
     if (isOpen) {
       document.body.style.overflow = 'hidden';
     }
@@ -48,14 +48,14 @@ export default function ModalContainer({
   return createPortal(
     <div
       ref={overlayRef}
-      className={`fixed inset-0 z-50 flex items-center justify-center bg-midnight bg-opacity-10 ${className}`}
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-midnight/70 backdrop-blur-xs ${className}`}
       onClick={handleOverlayClick}
     >
-      <div className="relative max-h-[90vh] w-[80vw] max-w-[90vw] overflow-auto rounded-lg bg-cream p-6 shadow-xl">
+      <div className='relative max-h-[90vh] w-[80vw] max-w-[90vw] overflow-auto rounded-lg bg-cream p-6 shadow-xl'>
         <button
           onClick={onClose}
-          className="absolute right-3 top-3 text-xl text-flame hover:text-flame font-semibold"
-          aria-label="Close modal"
+          className='absolute right-3 top-3 text-xl text-flame hover:text-flame font-semibold'
+          aria-label='Close modal'
         >
           ✕
         </button>

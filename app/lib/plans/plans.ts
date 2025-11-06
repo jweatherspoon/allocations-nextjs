@@ -2,7 +2,7 @@
 
 import { getUserId } from '../auth/auth0';
 import { getAllocationsDbContext, getUserData } from '../db/db-context';
-import { PlanDetails } from '../models/funds/plan.model';
+import { PlanDetails, PlannedAllocation } from '../models/funds/plan.model';
 
 export async function getAllPlans(): Promise<PlanDetails[]> {
   const userData = await getUserData();
@@ -76,6 +76,57 @@ export async function createPlan(
     return true;
   } catch (error) {
     console.error('Error adding plan:', error);
+    return false;
+  }
+}
+
+export async function addAllocationToPlan(
+  planId: string,
+  allocation: PlannedAllocation
+): Promise<boolean> {
+  const userId = await getUserId();
+  const container = await getAllocationsDbContext();
+
+  try {
+    // Check if user document exists
+    const { resource: existingUser } = await container
+      .item(userId, userId)
+      .read();
+
+    if (existingUser) {
+      // User exists, add allocation to plan
+      let planFound = false;
+      const updatedPlans = existingUser.plans.map((plan: PlanDetails) => {
+        if (plan.id === planId) {
+          planFound = true;
+
+          return {
+            ...plan,
+            allocations: [...(plan.allocations || []), allocation],
+          };
+        }
+
+        return plan;
+      });
+
+      if (!planFound) {
+        console.error('Plan not found when adding allocation');
+        return false;
+      }
+
+      await container.item(userId, userId).replace({
+        ...existingUser,
+        plans: updatedPlans,
+      });
+    } else {
+      // User doesn't exist, create new document
+      console.error('User not found when adding allocation');
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Error adding allocation:', error);
     return false;
   }
 }

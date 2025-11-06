@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { getPlanDetails } from '../../lib/plans/plans';
-import { getFundDetails } from '../../lib/funds/funds';
+import { getActiveFunds } from '../../lib/funds/funds';
 import TitledPageContainer from '@/components/containers/pages/titled-page-container';
 import DetailsSectionContainer from '@/components/containers/sections/details-section-container';
 import StatusChip from '@/components/chip/status-chip';
@@ -21,8 +21,7 @@ export default async function PlanDetailsPage({
     notFound();
   }
 
-  const targetFunds = plan.allocations.map((x) => x.targetFundId);
-  const fundDetails = await getFundDetails(targetFunds);
+  const fundDetails = await getActiveFunds();
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {

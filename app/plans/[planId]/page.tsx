@@ -6,6 +6,7 @@ import DetailsSectionContainer from '@/components/containers/sections/details-se
 import StatusChip from '@/components/chip/status-chip';
 import { ChipStatus } from '@/models/status/chip-status.enum';
 import PlannedAllocationsSection from '@/app/plans/[planId]/_components/planned-allocations-section';
+import { formatCurrency } from '@/utils/format.utils';
 
 export default async function PlanDetailsPage({
   params,
@@ -22,13 +23,6 @@ export default async function PlanDetailsPage({
   }
 
   const fundDetails = await getActiveFunds();
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(amount);
-  };
 
   const isOverdue = new Date(plan.expectedDate) < new Date();
   const status =

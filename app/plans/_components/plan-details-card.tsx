@@ -2,27 +2,13 @@ import StatusChip from '@/components/chip/status-chip';
 import { PlanDetails } from '../../lib/models/funds/plan.model';
 import { ChipStatus } from '@/models/status/chip-status.enum';
 import { ProgressBar } from '@/components/progress/progress-bar';
+import { formatCurrency, formatDate } from '@/utils/format.utils';
 
 interface PlanDetailsCardProps {
   plan: PlanDetails;
 }
 
 export function PlanDetailsCard({ plan }: PlanDetailsCardProps) {
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(amount);
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
-  };
-
   const currentlyAllocatedAmount = plan.allocations.reduce(
     (sum, allocation) => sum + allocation.value,
     0

@@ -1,7 +1,7 @@
 'use client';
 
 import AddTransactionModal from '@/app/funds/[fundId]/_components/add-transaction-modal';
-import FundTransactionCard from '@/app/funds/_components/fund-transaction-card';
+import FundTransactionCard from '@/app/funds/[fundId]/_components/fund-transaction-card';
 import { addTransactionToFund } from '@/app/lib/funds/funds';
 import { FundDetails } from '@/app/lib/models/funds/fund.model';
 import DetailsSectionContainer from '@/components/containers/sections/details-section-container';

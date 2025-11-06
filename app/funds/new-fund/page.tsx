@@ -58,7 +58,7 @@ export default function NewFundPage() {
 
   return (
     <TitledPageContainer
-      title='Create New Fund'
+      title='Create Fund'
       subtitle='Set up a new fund to start tracking your savings goals.'
     >
       <form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>

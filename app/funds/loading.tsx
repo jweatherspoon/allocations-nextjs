@@ -2,7 +2,9 @@ import TitledPageContainer from '@/components/containers/pages/titled-page-conta
 import { ListViewSkeleton } from '@/components/skeletons/list-view-skeleton';
 
 export default function FundsListLoadingPage() {
-  return <TitledPageContainer title='Funds'>
-    <ListViewSkeleton />
-  </TitledPageContainer>
+  return (
+    <TitledPageContainer title='Funds'>
+      <ListViewSkeleton cardCount={6} />
+    </TitledPageContainer>
+  );
 }

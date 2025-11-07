@@ -111,7 +111,7 @@ export async function executePlan(planId: string): Promise<boolean> {
         value: allocation.value,
         type: 'deposit',
         status: 'completed',
-        notes: `Allocation from "${plan.name}"`,
+        notes: allocation.notes || `Plan execution: ${plan.name}`,
       });
     }
   }

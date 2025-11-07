@@ -63,7 +63,7 @@ export default function FundTransactionDetailsSection({
       <AddTransactionModal
         isOpen={isTransactionModalOpen}
         onClose={() => setIsTransactionModalOpen(false)}
-        onSave={async (data) => {
+        onSaveAction={async (data) => {
           const success = await addTransactionToFund(fundDetails.id, data);
           if (!success) {
             console.error('Failed to add transaction');

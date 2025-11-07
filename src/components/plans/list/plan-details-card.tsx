@@ -19,10 +19,20 @@ export function PlanDetailsCard({ plan }: PlanDetailsCardProps) {
     100
   );
 
+  const isOverdue = new Date(plan.expectedDate) < new Date();
   const planStatuses = {
-    pending: ChipStatus.WARNING,
-    completed: ChipStatus.SUCCESS,
-    canceled: ChipStatus.ERROR,
+    pending: {
+      status: isOverdue ? ChipStatus.ERROR : ChipStatus.WARNING,
+      text: isOverdue ? 'overdue' : 'pending',
+    },
+    completed: {
+      status: ChipStatus.SUCCESS,
+      text: 'completed',
+    },
+    canceled: {
+      status: ChipStatus.ERROR,
+      text: 'canceled',
+    },
   };
 
   const dateSection = {
@@ -41,7 +51,10 @@ export function PlanDetailsCard({ plan }: PlanDetailsCardProps) {
             {plan.name}
           </h3>
         </div>
-        <StatusChip status={planStatuses[plan.status]} text={plan.status} />
+        <StatusChip
+          status={planStatuses[plan.status].status}
+          text={planStatuses[plan.status].text}
+        />
       </div>
 
       <div className='space-y-2'>

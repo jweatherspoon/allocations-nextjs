@@ -55,11 +55,28 @@ export async function upsertFunds(
 
 export async function addTransactionToFund(
   fundId: string,
-  transaction: TransactionDetails
+  transaction: Partial<TransactionDetails>
 ): Promise<boolean> {
   const fund = await getFundDetails([fundId]).then((f) => f?.[0]);
   if (!fund) return false;
 
-  fund.transactions.push(transaction);
+  const filledOutTransaction: TransactionDetails = {
+    ...transaction,
+    modifiedAt: new Date().toISOString(),
+    createdAt: transaction.createdAt || new Date().toISOString(),
+    id: transaction.id || crypto.randomUUID(),
+    status: transaction.status || 'completed',
+    type: transaction.type || 'deposit',
+    value: transaction.value || 0,
+  };
+
+  fund.transactions.push(filledOutTransaction);
+
+  const value =
+    filledOutTransaction.type === 'withdrawal'
+      ? -filledOutTransaction.value
+      : filledOutTransaction.value;
+
+  fund.currentAmount += value;
   return upsertFunds([fund]);
 }

@@ -3,6 +3,7 @@
 import { useForm } from 'react-hook-form';
 
 import Button from '@/components/shared/button/button';
+import { ControlledDatePickerInput } from '@/components/shared/form/inputs/controlled-date-picker-input';
 import { ControlledNumericInput } from '@/components/shared/form/inputs/controlled-numeric-input';
 import { ControlledSelectInput } from '@/components/shared/form/inputs/controlled-select-input';
 import { ControlledTextInput } from '@/components/shared/form/inputs/controlled-text-input';
@@ -12,12 +13,13 @@ interface TransactionFormData {
   amount: string;
   type: string;
   notes: string;
+  createdAt: string;
 }
 
 export default function AddTransactionForm({
-  onSave,
+  onSaveAction,
 }: {
-  onSave: (data: TransactionDetails) => Promise<void>;
+  onSaveAction: (data: TransactionDetails) => Promise<void>;
 }) {
   const {
     control,
@@ -29,6 +31,7 @@ export default function AddTransactionForm({
       amount: '',
       type: 'deposit',
       notes: '',
+      createdAt: new Date().toISOString().split('T')[0],
     },
   });
 
@@ -38,12 +41,12 @@ export default function AddTransactionForm({
       type: data.type as 'deposit' | 'withdrawal' | 'transfer',
       value: parseFloat(data.amount),
       status: 'completed',
-      createdAt: new Date().toISOString(),
+      createdAt: data.createdAt || new Date().toISOString(),
       modifiedAt: new Date().toISOString(),
       notes: data.notes,
     };
 
-    await onSave(transaction);
+    await onSaveAction(transaction);
   };
 
   return (
@@ -71,6 +74,16 @@ export default function AddTransactionForm({
             { value: 'withdrawal', label: 'Withdrawal' },
             { value: 'transfer', label: 'Transfer' },
           ]}
+          validations={{
+            required: true,
+          }}
+        />
+
+        <ControlledDatePickerInput
+          name='createdAt'
+          control={control}
+          id='transaction-date'
+          label='Transaction Date'
           validations={{
             required: true,
           }}

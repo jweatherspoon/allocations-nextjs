@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { getUserFunds } from '@/api/funds/funds.api';
 import FundCard from '@/components/funds/list/fund-card';
+import { FundsTitle } from '@/components/funds/list/funds-title';
 import TitledPageContainer from '@/components/shared/containers/pages/titled-page-container';
 
 export default async function ListFundsPage() {
@@ -24,8 +25,13 @@ export default async function ListFundsPage() {
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   });
 
+  const totalSaved = activeFunds.reduce(
+    (acc, fund) => acc + (fund.currentAmount || 0),
+    0
+  );
+
   return (
-    <TitledPageContainer title='Funds'>
+    <TitledPageContainer title={<FundsTitle totalSaved={totalSaved} />}>
       {activeFunds.length === 0 ? (
         <p className='text-dusk'>No active funds available.</p>
       ) : (

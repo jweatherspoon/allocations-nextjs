@@ -4,13 +4,13 @@ import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
+import { getUserFunds } from '@/api/funds/funds.api';
+import { upsertPlans } from '@/api/plans/plans.api';
 import Button from '@/components/shared/button/button';
 import TitledPageContainer from '@/components/shared/containers/pages/titled-page-container';
 import { ControlledDatePickerInput } from '@/components/shared/form/inputs/controlled-date-picker-input';
 import { ControlledNumericInput } from '@/components/shared/form/inputs/controlled-numeric-input';
 import { ControlledTextInput } from '@/components/shared/form/inputs/controlled-text-input';
-import { getActiveFunds } from '@/lib/funds/funds';
-import { createPlan } from '@/lib/plans/plans';
 import { FundDetails } from '@/models/funds/fund.model';
 import { PlanDetails } from '@/models/funds/plan.model';
 
@@ -33,7 +33,7 @@ export default function NewPlanPage() {
   useEffect(() => {
     const loadFunds = async () => {
       try {
-        const activeFunds = await getActiveFunds();
+        const activeFunds = await getUserFunds();
         setFunds(activeFunds);
       } catch (error) {
         console.error('Error loading funds:', error);
@@ -63,7 +63,7 @@ export default function NewPlanPage() {
         notes: data.notes || undefined,
       };
 
-      await createPlan(newPlan);
+      await upsertPlans([newPlan]);
 
       router.back();
     } catch (error) {

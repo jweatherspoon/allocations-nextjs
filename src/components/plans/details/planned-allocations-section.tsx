@@ -8,7 +8,7 @@ import AllocationDetailsCard from '@/components/plans/details/allocation-details
 import Button from '@/components/shared/button/button';
 import DetailsSectionContainer from '@/components/shared/containers/sections/details-section-container';
 import { ProgressBar } from '@/components/shared/progress/progress-bar';
-import { addAllocationToPlan, executePlan } from '@/lib/plans/plans';
+import { addAllocationToPlan, executePlan } from '@/api/plans/plans.api';
 import { FundDetails } from '@/models/funds/fund.model';
 import { PlanDetails } from '@/models/funds/plan.model';
 

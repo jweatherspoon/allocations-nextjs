@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { auth0 } from './lib/auth/auth0';
+import { auth0 } from '@/api/auth/auth0.api';
 
 export async function proxy(request: NextRequest) {
   const authRes = await auth0.middleware(request);

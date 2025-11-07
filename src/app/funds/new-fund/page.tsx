@@ -4,12 +4,12 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
+import { upsertFunds } from '@/api/funds/funds.api';
 import Button from '@/components/shared/button/button';
 import TitledPageContainer from '@/components/shared/containers/pages/titled-page-container';
 import { ControlledDatePickerInput } from '@/components/shared/form/inputs/controlled-date-picker-input';
 import { ControlledNumericInput } from '@/components/shared/form/inputs/controlled-numeric-input';
 import { ControlledTextInput } from '@/components/shared/form/inputs/controlled-text-input';
-import { createFund } from '@/lib/funds/funds';
 import { FundDetails, FundStatus } from '@/models/funds/fund.model';
 
 export default function NewFundPage() {
@@ -47,7 +47,7 @@ export default function NewFundPage() {
         transactions: [],
       };
 
-      await createFund(newFund);
+      await upsertFunds([newFund]);
 
       router.back();
     } catch (error) {

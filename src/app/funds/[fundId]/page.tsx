@@ -1,11 +1,11 @@
 import { notFound } from 'next/navigation';
 
+import { getFundDetails } from '@/api/funds/funds.api';
 import FundTransactionDetailsSection from '@/components/funds/details/fund-transaction-details-section';
 import StatusChip from '@/components/shared/chip/status-chip';
 import TitledPageContainer from '@/components/shared/containers/pages/titled-page-container';
 import DetailsSectionContainer from '@/components/shared/containers/sections/details-section-container';
 import { ProgressBar } from '@/components/shared/progress/progress-bar';
-import { getFundDetails } from '@/lib/funds/funds';
 import { ChipStatus } from '@/models/status/chip-status.enum';
 
 export default async function FundDetailsPage({
@@ -14,9 +14,10 @@ export default async function FundDetailsPage({
   params: Promise<{ fundId: string }>;
 }) {
   const { fundId } = await params;
-  const fundDetails = await getFundDetails([fundId]).then((funds) =>
-    funds ? funds[0] : null
+  const fundDetails = await getFundDetails([fundId]).then(
+    (funds) => funds?.[0]
   );
+
   if (!fundDetails) {
     notFound();
   }

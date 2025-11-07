@@ -4,7 +4,6 @@ export type PlanStatus = 'pending' | 'completed' | 'canceled';
 
 export interface PlannedAllocation extends TransactionDetails {
   type: 'deposit';
-  status: 'pending';
   targetFundId: string;
 }
 

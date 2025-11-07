@@ -1,12 +1,11 @@
 import Link from 'next/link';
 
+import { getUserFunds } from '@/api/funds/funds.api';
 import FundCard from '@/components/funds/list/fund-card';
 import TitledPageContainer from '@/components/shared/containers/pages/titled-page-container';
-import { getActiveFunds } from '@/lib/funds/funds';
-
 
 export default async function ListFundsPage() {
-  const funds = await getActiveFunds();
+  const funds = await getUserFunds();
   const activeFunds = funds.sort((a, b) => {
     if (a.rank !== b.rank) {
       if (a.rank == null) return 1;

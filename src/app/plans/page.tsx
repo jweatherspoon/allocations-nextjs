@@ -1,11 +1,11 @@
 import Link from 'next/link';
 
+import { getUserPlans } from '@/api/plans/plans.api';
 import { PlanDetailsCard } from '@/components/plans/list/plan-details-card';
 import TitledPageContainer from '@/components/shared/containers/pages/titled-page-container';
-import { getAllPlans } from '@/lib/plans/plans';
 
 export default async function PlansPage() {
-  const plans = await getAllPlans();
+  const plans = await getUserPlans();
 
   const pendingPlans = plans
     ?.filter((plan) => plan.status === 'pending')

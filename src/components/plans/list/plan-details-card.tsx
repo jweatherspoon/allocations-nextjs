@@ -25,6 +25,14 @@ export function PlanDetailsCard({ plan }: PlanDetailsCardProps) {
     canceled: ChipStatus.ERROR,
   };
 
+  const dateSection = {
+    text: plan.status === 'completed' ? 'Completed:' : 'Expected:',
+    date:
+      plan.status === 'completed'
+        ? formatDate(plan.modifiedAt)
+        : formatDate(plan.expectedDate),
+  };
+
   return (
     <div className='bg-cream rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow'>
       <div className='flex justify-between items-start mb-4'>
@@ -38,20 +46,20 @@ export function PlanDetailsCard({ plan }: PlanDetailsCardProps) {
 
       <div className='space-y-2'>
         <div className='flex justify-between items-center'>
-          <span className='text-sm text-dusk'>Expected:</span>
-          <span className='text-sm text-midnight'>
-            {formatDate(plan.expectedDate)}
-          </span>
+          <span className='text-sm text-dusk'>{dateSection.text}</span>
+          <span className='text-sm text-midnight'>{dateSection.date}</span>
         </div>
 
         <div>
           <ProgressBar progress={progressPercentage} />
-          <div className='flex justify-end items-center mt-2'>
-            <span className='text-sm text-midnight'>
-              Remaining:{' '}
-              {formatCurrency(plan.amount - currentlyAllocatedAmount)}
-            </span>
-          </div>
+          {plan.status === 'pending' && (
+            <div className='flex justify-end items-center mt-2'>
+              <span className='text-sm text-midnight'>
+                Remaining:{' '}
+                {formatCurrency(plan.amount - currentlyAllocatedAmount)}
+              </span>
+            </div>
+          )}
         </div>
       </div>
 

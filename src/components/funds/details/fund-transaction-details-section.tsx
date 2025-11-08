@@ -3,8 +3,9 @@
 import { useState } from 'react';
 
 import { addTransactionToFund } from '@/api/funds/funds.api';
-import AddTransactionModal from '@/components/funds/details/add-transaction-modal';
+import AddTransactionForm from '@/components/funds/details/add-transaction-form';
 import FundTransactionCard from '@/components/funds/details/fund-transaction-card';
+import TransactionModal from '@/components/funds/details/transaction-modal';
 import DetailsSectionContainer from '@/components/shared/containers/sections/details-section-container';
 import { FundDetails } from '@/models/funds/fund.model';
 
@@ -16,7 +17,25 @@ export default function FundTransactionDetailsSection({
   const [newTransactions, setNewTransactions] = useState(
     fundDetails.transactions
   );
-  const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
+  const [transactionModalContent, setTransactionModalContent] =
+    useState<React.ReactNode>(null);
+
+  const onOpenAddTransactionModal = () => {
+    setTransactionModalContent(
+      <AddTransactionForm
+        onSaveAction={async (data) => {
+          const success = await addTransactionToFund(fundDetails.id, data);
+          if (!success) {
+            console.error('Failed to add transaction');
+            return;
+          }
+
+          setNewTransactions((prev) => [...prev, data]);
+          setTransactionModalContent(null);
+        }}
+      />
+    );
+  };
 
   return (
     <div>
@@ -27,7 +46,7 @@ export default function FundTransactionDetailsSection({
           <button
             className='p-1.5 rounded-full bg-flame text-cream hover:bg-opacity-90 transition-colors'
             aria-label='Add new transaction'
-            onClick={() => setIsTransactionModalOpen(true)}
+            onClick={onOpenAddTransactionModal}
           >
             <svg
               xmlns='http://www.w3.org/2000/svg'
@@ -60,19 +79,12 @@ export default function FundTransactionDetailsSection({
           )}
         </div>
       </DetailsSectionContainer>
-      <AddTransactionModal
-        isOpen={isTransactionModalOpen}
-        onClose={() => setIsTransactionModalOpen(false)}
-        onSaveAction={async (data) => {
-          const success = await addTransactionToFund(fundDetails.id, data);
-          if (!success) {
-            console.error('Failed to add transaction');
-            return;
-          }
-
-          setNewTransactions((prev) => [...prev, data]);
-        }}
-      />
+      <TransactionModal
+        isOpen={transactionModalContent !== null}
+        onClose={() => setTransactionModalContent(null)}
+      >
+        {transactionModalContent}
+      </TransactionModal>
     </div>
   );
 }

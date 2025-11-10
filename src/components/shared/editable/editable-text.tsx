@@ -24,7 +24,9 @@ export default function EditableText({
 
   const handleTextBlur = () => {
     setIsEditing(false);
-    onCommitChangeAction?.(currentText);
+    if (currentText !== text) {
+      onCommitChangeAction?.(currentText);
+    }
   };
 
   return isEditing ? (

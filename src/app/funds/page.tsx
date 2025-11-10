@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getUserFunds } from '@/api/funds/funds.api';
 import FundCard from '@/components/funds/list/fund-card';
 import { FundsTitle } from '@/components/funds/list/funds-title';
+import BottomNav from '@/components/navigation/bottom-nav';
 import TitledPageContainer from '@/components/shared/containers/pages/titled-page-container';
 
 export default async function ListFundsPage() {
@@ -80,6 +81,7 @@ export default async function ListFundsPage() {
           ))}
         </div>
       )}
+      <BottomNav />
     </TitledPageContainer>
   );
 }

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import { getUserPlans } from '@/api/plans/plans.api';
+import BottomNav from '@/components/navigation/bottom-nav';
 import { PlanDetailsCard } from '@/components/plans/list/plan-details-card';
 import TitledPageContainer from '@/components/shared/containers/pages/titled-page-container';
 
@@ -94,6 +95,7 @@ export default async function PlansPage() {
           </div>
         </div>
       )}
+      <BottomNav />
     </TitledPageContainer>
   );
 }

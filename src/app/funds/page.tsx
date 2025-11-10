@@ -7,7 +7,7 @@ import TitledPageContainer from '@/components/shared/containers/pages/titled-pag
 
 export default async function ListFundsPage() {
   const funds = await getUserFunds();
-  const activeFunds = funds.sort((a, b) => {
+  const sortedFunds = funds.sort((a, b) => {
     if (a.rank !== b.rank) {
       if (a.rank == null) return 1;
       if (b.rank == null) return -1;
@@ -25,6 +25,11 @@ export default async function ListFundsPage() {
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   });
 
+  const activeFunds = sortedFunds.filter((fund) => fund.status === 'active');
+  const archivedFunds = sortedFunds.filter(
+    (fund) => fund.status === 'archived'
+  );
+
   const totalSaved = activeFunds.reduce(
     (acc, fund) => acc + (fund.currentAmount || 0),
     0
@@ -32,14 +37,46 @@ export default async function ListFundsPage() {
 
   return (
     <TitledPageContainer title={<FundsTitle totalSaved={totalSaved} />}>
+      <div className='mb-2 flex gap-2 items-center'>
+        <h2 className='text-lg font-semibold text-midnight mb-2'>
+          Active Funds
+        </h2>
+        <hr className='flex-grow border-t border-flame' />
+      </div>
       {activeFunds.length === 0 ? (
         <p className='text-dusk'>No active funds available.</p>
       ) : (
-        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
+        <div className='mb-6 space-y-4'>
           {activeFunds.map((fund) => (
-            <Link key={fund.id} href={`/funds/${fund.id}/`}>
-              <FundCard {...fund} />
-            </Link>
+            <div key={fund.id}>
+              <Link href={`/funds/${fund.id}/`}>
+                <FundCard {...fund} />
+              </Link>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className='mb-2 flex gap-2 items-center'>
+        <h2 className='text-lg font-semibold text-midnight mb-2'>
+          Archived Funds
+        </h2>
+        <hr className='flex-grow border-t border-flame' />
+      </div>
+      {archivedFunds.length === 0 ? (
+        <div className=''>
+          <p className='text-dusk text-center'>
+            No funds have been archived yet.
+          </p>
+        </div>
+      ) : (
+        <div className='space-y-4'>
+          {archivedFunds.map((fund) => (
+            <div key={fund.id}>
+              <Link href={`/funds/${fund.id}/`}>
+                <FundCard {...fund} />
+              </Link>
+            </div>
           ))}
         </div>
       )}

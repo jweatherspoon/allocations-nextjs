@@ -3,11 +3,13 @@
 import { useState } from 'react';
 
 import { addTransactionToFund } from '@/api/funds/funds.api';
-import AddTransactionForm from '@/components/funds/details/add-transaction-form';
+import AddTransactionModalContent from '@/components/funds/details/add-transaction-modal-content';
 import FundTransactionCard from '@/components/funds/details/fund-transaction-card';
+import TransactionDetailsModalContent from '@/components/funds/details/transaction-details-modal-content';
 import TransactionModal from '@/components/funds/details/transaction-modal';
 import DetailsSectionContainer from '@/components/shared/containers/sections/details-section-container';
 import { FundDetails } from '@/models/funds/fund.model';
+import { TransactionDetails } from '@/models/funds/transaction.model';
 
 export default function FundTransactionDetailsSection({
   fundDetails,
@@ -22,7 +24,7 @@ export default function FundTransactionDetailsSection({
 
   const onOpenAddTransactionModal = () => {
     setTransactionModalContent(
-      <AddTransactionForm
+      <AddTransactionModalContent
         onSaveAction={async (data) => {
           const success = await addTransactionToFund(fundDetails.id, data);
           if (!success) {
@@ -34,6 +36,12 @@ export default function FundTransactionDetailsSection({
           setTransactionModalContent(null);
         }}
       />
+    );
+  };
+
+  const onOpenTransactionDetailsModal = (details: TransactionDetails) => {
+    setTransactionModalContent(
+      <TransactionDetailsModalContent transactionDetails={details} />
     );
   };
 
@@ -69,10 +77,15 @@ export default function FundTransactionDetailsSection({
               .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
               .slice(0, 10)
               .map((transaction) => (
-                <FundTransactionCard
+                <div
+                  onClick={() => onOpenTransactionDetailsModal(transaction)}
                   key={transaction.id}
-                  transaction={transaction}
-                />
+                >
+                  <FundTransactionCard
+                    key={transaction.id}
+                    transaction={transaction}
+                  />
+                </div>
               ))
           ) : (
             <p className='text-dusk'>No recent transactions found.</p>

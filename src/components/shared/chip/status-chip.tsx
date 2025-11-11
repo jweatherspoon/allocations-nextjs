@@ -3,9 +3,13 @@ import { ChipStatus } from '@/models/status/chip-status.enum';
 export default function StatusChip({
   status,
   text,
+  children,
+  className,
 }: {
   status: ChipStatus;
-  text: string;
+  text?: string;
+  children?: React.ReactNode;
+  className?: string;
 }) {
   const statusColors = {
     [ChipStatus.INFO]: 'bg-blue-100 text-blue-800',
@@ -18,9 +22,9 @@ export default function StatusChip({
 
   return (
     <div
-      className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${statusColor}`}
+      className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${className} ${statusColor}`}
     >
-      {text}
+      {children ?? text}
     </div>
   );
 }

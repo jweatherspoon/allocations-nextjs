@@ -4,3 +4,9 @@ export enum ChipStatus {
   WARNING = 2,
   ERROR = 3,
 }
+
+export type RenderedChipStatus = {
+  id: string;
+  label: string;
+  status: ChipStatus;
+};

@@ -2,13 +2,16 @@
 
 import { editFundDetails } from '@/api/funds/funds.api';
 import FundTransactionDetailsSection from '@/components/funds/details/fund-transaction-details-section';
-import StatusChip from '@/components/shared/chip/status-chip';
 import TitledPageContainer from '@/components/shared/containers/pages/titled-page-container';
 import DetailsSectionContainer from '@/components/shared/containers/sections/details-section-container';
+import EditableChip from '@/components/shared/editable/editable-chip';
 import EditableText from '@/components/shared/editable/editable-text';
 import { ProgressBar } from '@/components/shared/progress/progress-bar';
-import { FundDetails } from '@/models/funds/fund.model';
-import { ChipStatus } from '@/models/status/chip-status.enum';
+import { FundDetails, FundStatus } from '@/models/funds/fund.model';
+import {
+  ChipStatus,
+  RenderedChipStatus,
+} from '@/models/status/chip-status.enum';
 import { formatDate } from '@/utils/format.utils';
 
 export default function FundDetailsPageContent({
@@ -30,7 +33,6 @@ export default function FundDetailsPageContent({
   const isOverdue = fundDetails.targetDate
     ? new Date(fundDetails.targetDate) < new Date()
     : false;
-  const overdueStatus = isOverdue ? ChipStatus.ERROR : ChipStatus.SUCCESS;
 
   const updateTextField = (field: keyof FundDetails) => {
     return async (newValue: string) => {
@@ -38,6 +40,28 @@ export default function FundDetailsPageContent({
       await editFundDetails(updatedFund);
     };
   };
+
+  const updateFundStatus = async (newStatus: RenderedChipStatus) => {
+    const updatedFund = { ...fundDetails, status: newStatus.id as FundStatus };
+    await editFundDetails(updatedFund);
+  };
+
+  const statuses: RenderedChipStatus[] = [
+    {
+      id: 'active',
+      status: isOverdue ? ChipStatus.ERROR : ChipStatus.INFO,
+      label: isOverdue ? 'overdue' : 'active',
+    },
+    {
+      id: 'archived',
+      status: ChipStatus.SUCCESS,
+      label: 'archived',
+    },
+  ];
+
+  const currentStatus = statuses.find(
+    (status) => status.id === fundDetails.status
+  )!;
 
   return (
     <TitledPageContainer
@@ -79,9 +103,10 @@ export default function FundDetailsPageContent({
                 {formatDate(fundDetails.targetDate)}
               </span>
             </h3>
-            <StatusChip
-              status={overdueStatus}
-              text={isOverdue ? 'overdue' : 'on track'}
+            <EditableChip
+              currentStatus={currentStatus}
+              statuses={statuses}
+              onCommitChangeAction={updateFundStatus}
             />
           </div>
         </DetailsSectionContainer>

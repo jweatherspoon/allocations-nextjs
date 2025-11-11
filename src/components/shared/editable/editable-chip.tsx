@@ -1,9 +1,40 @@
 'use client';
 
-import { useState } from 'react';
+import { EffectFade } from 'swiper/modules';
+import { Swiper, SwiperSlide, useSwiper } from 'swiper/react';
 
 import StatusChip from '@/components/shared/chip/status-chip';
-import { RenderedChipStatus } from '@/models/status/chip-status.enum';
+import {
+  ChipStatus,
+  RenderedChipStatus,
+} from '@/models/status/chip-status.enum';
+
+import 'swiper/css';
+import 'swiper/css/effect-fade';
+
+function ChipSwiperSlide({
+  id,
+  status,
+  label,
+}: {
+  id: string;
+  status: ChipStatus;
+  label: string;
+}) {
+  const swiper = useSwiper();
+
+  return (
+    <div
+      onClick={() => {
+        swiper.slideNext();
+      }}
+    >
+      <StatusChip status={status} className='w-full flex justify-center'>
+        {label}
+      </StatusChip>
+    </div>
+  );
+}
 
 export default function EditableChip({
   currentStatus,
@@ -14,57 +45,37 @@ export default function EditableChip({
   statuses: RenderedChipStatus[];
   onCommitChangeAction?: (newStatus: RenderedChipStatus) => void;
 }) {
-  const [isEditing, setIsEditing] = useState(false);
-
-  const handleChipClick = () => {
-    setIsEditing((prev) => !prev);
-  };
-
-  const findStatus = (deltaIndex: number) => {
-    const currentIndex = statuses.findIndex(
-      (status) =>
-        status.status === currentStatus.status &&
-        status.label === currentStatus.label
-    );
-
-    const newIndex =
-      (currentIndex + deltaIndex + statuses.length) % statuses.length;
-
-    return statuses[newIndex];
-  };
-
-  const priorStatus = findStatus(-1);
-  const nextStatus = findStatus(1);
-
-  return isEditing ? (
-    <div
-      className='relative flex items-center flex-col'
-      onClick={handleChipClick}
-    >
-      <div className='absolute -right-1 -top-4'>
-        <StatusChip
-          status={priorStatus.status}
-          text={priorStatus.label}
-          className='blur-[1px] shadow-sm'
-        />
-      </div>
-      <StatusChip
-        status={currentStatus.status}
-        className='z-2 shadow-md mr-4 mb-2'
+  return (
+    <div className='w-24'>
+      <Swiper
+        slidesPerView={1}
+        rewind
+        onSlideChange={(swiper) => {
+          console.log('Slide changed to index:', swiper.activeIndex);
+          onCommitChangeAction?.(statuses[swiper.activeIndex]);
+        }}
+        effect='fade'
+        fadeEffect={{
+          crossFade: true,
+        }}
+        modules={[EffectFade]}
+        initialSlide={statuses.findIndex(
+          (status) =>
+            status.id === currentStatus.id &&
+            status.status === currentStatus.status &&
+            status.label === currentStatus.label
+        )}
       >
-        {currentStatus.label}
-      </StatusChip>
-      <div className='absolute -bottom-5 -right-4'>
-        <StatusChip
-          status={nextStatus.status}
-          text={nextStatus.label}
-          className='blur-[1px] shadow-sm'
-        />
-      </div>
-    </div>
-  ) : (
-    <div onClick={handleChipClick}>
-      <StatusChip status={currentStatus.status} text={currentStatus.label} />
+        {statuses.map((slide) => (
+          <SwiperSlide key={slide.id}>
+            <ChipSwiperSlide
+              id={slide.id}
+              status={slide.status}
+              label={slide.label}
+            />
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </div>
   );
 }

@@ -6,6 +6,7 @@ export enum ChipStatus {
 }
 
 export type RenderedChipStatus = {
+  id: string;
   label: string;
   status: ChipStatus;
 };

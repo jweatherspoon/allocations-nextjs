@@ -12,3 +12,7 @@ export function formatDate(dateString: string): string {
     day: 'numeric',
   });
 }
+
+export function formatDateISO(dateString: string): string {
+  return new Date(dateString).toISOString().split('T')[0];
+}

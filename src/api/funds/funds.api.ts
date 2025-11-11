@@ -80,3 +80,9 @@ export async function addTransactionToFund(
   fund.currentAmount += value;
   return upsertFunds([fund]);
 }
+
+export async function editFundDetails(
+  updatedDetails: Partial<FundDetails>
+): Promise<boolean> {
+  return upsertFunds([updatedDetails]);
+}

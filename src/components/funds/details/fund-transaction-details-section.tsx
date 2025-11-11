@@ -3,10 +3,13 @@
 import { useState } from 'react';
 
 import { addTransactionToFund } from '@/api/funds/funds.api';
-import AddTransactionModal from '@/components/funds/details/add-transaction-modal';
+import AddTransactionModalContent from '@/components/funds/details/add-transaction-modal-content';
 import FundTransactionCard from '@/components/funds/details/fund-transaction-card';
+import TransactionDetailsModalContent from '@/components/funds/details/transaction-details-modal-content';
+import TransactionModal from '@/components/funds/details/transaction-modal';
 import DetailsSectionContainer from '@/components/shared/containers/sections/details-section-container';
 import { FundDetails } from '@/models/funds/fund.model';
+import { TransactionDetails } from '@/models/funds/transaction.model';
 
 export default function FundTransactionDetailsSection({
   fundDetails,
@@ -16,7 +19,31 @@ export default function FundTransactionDetailsSection({
   const [newTransactions, setNewTransactions] = useState(
     fundDetails.transactions
   );
-  const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
+  const [transactionModalContent, setTransactionModalContent] =
+    useState<React.ReactNode>(null);
+
+  const onOpenAddTransactionModal = () => {
+    setTransactionModalContent(
+      <AddTransactionModalContent
+        onSaveAction={async (data) => {
+          const success = await addTransactionToFund(fundDetails.id, data);
+          if (!success) {
+            console.error('Failed to add transaction');
+            return;
+          }
+
+          setNewTransactions((prev) => [...prev, data]);
+          setTransactionModalContent(null);
+        }}
+      />
+    );
+  };
+
+  const onOpenTransactionDetailsModal = (details: TransactionDetails) => {
+    setTransactionModalContent(
+      <TransactionDetailsModalContent transactionDetails={details} />
+    );
+  };
 
   return (
     <div>
@@ -27,7 +54,7 @@ export default function FundTransactionDetailsSection({
           <button
             className='p-1.5 rounded-full bg-flame text-cream hover:bg-opacity-90 transition-colors'
             aria-label='Add new transaction'
-            onClick={() => setIsTransactionModalOpen(true)}
+            onClick={onOpenAddTransactionModal}
           >
             <svg
               xmlns='http://www.w3.org/2000/svg'
@@ -50,29 +77,27 @@ export default function FundTransactionDetailsSection({
               .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
               .slice(0, 10)
               .map((transaction) => (
-                <FundTransactionCard
+                <div
+                  onClick={() => onOpenTransactionDetailsModal(transaction)}
                   key={transaction.id}
-                  transaction={transaction}
-                />
+                >
+                  <FundTransactionCard
+                    key={transaction.id}
+                    transaction={transaction}
+                  />
+                </div>
               ))
           ) : (
             <p className='text-dusk'>No recent transactions found.</p>
           )}
         </div>
       </DetailsSectionContainer>
-      <AddTransactionModal
-        isOpen={isTransactionModalOpen}
-        onClose={() => setIsTransactionModalOpen(false)}
-        onSaveAction={async (data) => {
-          const success = await addTransactionToFund(fundDetails.id, data);
-          if (!success) {
-            console.error('Failed to add transaction');
-            return;
-          }
-
-          setNewTransactions((prev) => [...prev, data]);
-        }}
-      />
+      <TransactionModal
+        isOpen={transactionModalContent !== null}
+        onClose={() => setTransactionModalContent(null)}
+      >
+        {transactionModalContent}
+      </TransactionModal>
     </div>
   );
 }

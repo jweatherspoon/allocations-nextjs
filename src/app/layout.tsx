@@ -1,8 +1,6 @@
 import './globals.css';
 import { Geist, Geist_Mono } from 'next/font/google';
 
-import BottomNav from '@/components/navigation/bottom-nav';
-
 import type { Metadata } from 'next';
 
 const geistSans = Geist({
@@ -34,7 +32,6 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <div>{children}</div>
-        <BottomNav />
       </body>
     </html>
   );

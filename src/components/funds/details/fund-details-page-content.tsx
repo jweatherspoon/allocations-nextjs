@@ -5,6 +5,7 @@ import FundTransactionDetailsSection from '@/components/funds/details/fund-trans
 import StatusChip from '@/components/shared/chip/status-chip';
 import TitledPageContainer from '@/components/shared/containers/pages/titled-page-container';
 import DetailsSectionContainer from '@/components/shared/containers/sections/details-section-container';
+import EditableChip from '@/components/shared/editable/editable-chip';
 import EditableText from '@/components/shared/editable/editable-text';
 import { ProgressBar } from '@/components/shared/progress/progress-bar';
 import { FundDetails } from '@/models/funds/fund.model';
@@ -79,9 +80,20 @@ export default function FundDetailsPageContent({
                 {formatDate(fundDetails.targetDate)}
               </span>
             </h3>
-            <StatusChip
+            {/* <StatusChip
               status={overdueStatus}
               text={isOverdue ? 'overdue' : 'on track'}
+            /> */}
+            <EditableChip
+              currentStatus={{
+                status: ChipStatus.INFO,
+                label: 'active',
+              }}
+              statuses={[
+                { status: ChipStatus.INFO, label: 'active' },
+                { status: ChipStatus.SUCCESS, label: 'completed' },
+                { status: ChipStatus.ERROR, label: 'overdue' },
+              ]}
             />
           </div>
         </DetailsSectionContainer>

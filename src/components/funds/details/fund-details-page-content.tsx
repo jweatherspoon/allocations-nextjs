@@ -2,6 +2,7 @@
 
 import { editFundDetails } from '@/api/funds/funds.api';
 import FundTransactionDetailsSection from '@/components/funds/details/fund-transaction-details-section';
+import TransactionTrendChart from '@/components/funds/details/transaction-trend-chart';
 import TitledPageContainer from '@/components/shared/containers/pages/titled-page-container';
 import DetailsSectionContainer from '@/components/shared/containers/sections/details-section-container';
 import EditableChip from '@/components/shared/editable/editable-chip';
@@ -114,10 +115,7 @@ export default function FundDetailsPageContent({
 
       {/* Trend Section */}
       <DetailsSectionContainer>
-        <p className='text-dusk'>
-          {/* Placeholder for trend chart or data */}
-          Trend data and charts will be displayed here.
-        </p>
+        <TransactionTrendChart transactions={fundDetails.transactions} />
       </DetailsSectionContainer>
 
       <FundTransactionDetailsSection fundDetails={fundDetails} />

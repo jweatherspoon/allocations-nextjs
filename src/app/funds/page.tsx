@@ -5,6 +5,8 @@ import FundCard from '@/components/funds/list/fund-card';
 import { FundsTitle } from '@/components/funds/list/funds-title';
 import BottomNav from '@/components/navigation/bottom-nav';
 import TitledPageContainer from '@/components/shared/containers/pages/titled-page-container';
+import { CardStackSwiper } from '@/components/shared/swipers/card-stack-swiper';
+import { PanoramicSwiper } from '@/components/shared/swipers/panoramic-swiper';
 
 export default async function ListFundsPage() {
   const funds = await getUserFunds();
@@ -36,6 +38,22 @@ export default async function ListFundsPage() {
     0
   );
 
+  const activeFundCards = activeFunds.map((fund) => (
+    <div key={fund.id}>
+      <Link href={`/funds/${fund.id}/`}>
+        <FundCard {...fund} />
+      </Link>
+    </div>
+  ));
+
+  const archivedFundCards = archivedFunds.map((fund) => (
+    <div key={fund.id}>
+      <Link href={`/funds/${fund.id}/`}>
+        <FundCard {...fund} />
+      </Link>
+    </div>
+  ));
+
   return (
     <TitledPageContainer title={<FundsTitle totalSaved={totalSaved} />}>
       <div className='mb-2 flex gap-2 items-center'>
@@ -47,15 +65,7 @@ export default async function ListFundsPage() {
       {activeFunds.length === 0 ? (
         <p className='text-dusk'>No active funds available.</p>
       ) : (
-        <div className='mb-6 space-y-4'>
-          {activeFunds.map((fund) => (
-            <div key={fund.id}>
-              <Link href={`/funds/${fund.id}/`}>
-                <FundCard {...fund} />
-              </Link>
-            </div>
-          ))}
-        </div>
+        <PanoramicSwiper cards={activeFundCards} />
       )}
 
       <div className='mb-2 flex gap-2 items-center'>
@@ -72,13 +82,7 @@ export default async function ListFundsPage() {
         </div>
       ) : (
         <div className='space-y-4'>
-          {archivedFunds.map((fund) => (
-            <div key={fund.id}>
-              <Link href={`/funds/${fund.id}/`}>
-                <FundCard {...fund} />
-              </Link>
-            </div>
-          ))}
+          <CardStackSwiper cards={archivedFundCards} direction='horizontal' />
         </div>
       )}
       <BottomNav />

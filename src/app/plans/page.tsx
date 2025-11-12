@@ -4,6 +4,8 @@ import { getUserPlans } from '@/api/plans/plans.api';
 import BottomNav from '@/components/navigation/bottom-nav';
 import { PlanDetailsCard } from '@/components/plans/list/plan-details-card';
 import TitledPageContainer from '@/components/shared/containers/pages/titled-page-container';
+import { CardStackSwiper } from '@/components/shared/swipers/card-stack-swiper';
+import { PanoramicSwiper } from '@/components/shared/swipers/panoramic-swiper';
 
 export default async function PlansPage() {
   const plans = await getUserPlans();
@@ -22,6 +24,22 @@ export default async function PlansPage() {
         new Date(a.modifiedAt || '').getTime()
     );
 
+  const pendingPlanCards = pendingPlans?.map((plan) => (
+    <div key={plan.id}>
+      <Link href={`/plans/${plan.id}`}>
+        <PlanDetailsCard plan={plan} />
+      </Link>
+    </div>
+  ));
+
+  const completedPlanCards = completedPlans?.map((plan) => (
+    <div key={plan.id}>
+      <Link href={`/plans/${plan.id}`}>
+        <PlanDetailsCard plan={plan} />
+      </Link>
+    </div>
+  ));
+
   return (
     <TitledPageContainer title='Plans'>
       <div className='mb-4 flex gap-2 items-center'>
@@ -30,19 +48,15 @@ export default async function PlansPage() {
         </h2>
         <hr className='flex-grow border-t border-flame' />
       </div>
-      <div className='mb-6 space-y-4'>
-        {pendingPlans?.length ? (
-          pendingPlans.map((plan) => (
-            <div key={plan.id}>
-              <Link href={`/plans/${plan.id}`}>
-                <PlanDetailsCard plan={plan} />
-              </Link>
-            </div>
-          ))
-        ) : (
-          <p className='text-dusk text-center'>No currently pending plans.</p>
-        )}
-      </div>
+      {pendingPlans?.length ? (
+        <div className='mb-6 space-y-4 overflow-hidden'>
+          <PanoramicSwiper cards={pendingPlanCards} />
+        </div>
+      ) : (
+        <p className='text-dusk text-center mb-6'>
+          No currently pending plans.
+        </p>
+      )}
       <div className='mb-4 flex gap-2 items-center'>
         <h2 className='text-lg font-semibold text-midnight mb-2'>
           Completed Plans
@@ -51,13 +65,7 @@ export default async function PlansPage() {
       </div>
       <div className='space-y-4'>
         {completedPlans?.length ? (
-          completedPlans.map((plan) => (
-            <div key={plan.id}>
-              <Link href={`/plans/${plan.id}`}>
-                <PlanDetailsCard plan={plan} />
-              </Link>
-            </div>
-          ))
+          <CardStackSwiper cards={completedPlanCards} direction='horizontal' />
         ) : (
           <p className='text-dusk'>No completed plans found.</p>
         )}

@@ -49,7 +49,7 @@ export default function FundTransactionCard({
             {transaction.type}
           </p>
           <p className='text-xs text-gray-500'>
-            {new Date(transaction.createdAt).toISOString().split('T')[0]}
+            {new Date(transaction.modifiedAt).toISOString().split('T')[0]}
           </p>
           {transaction.notes && (
             <p className='text-xs text-gray-600 mt-1 line-clamp-1'>

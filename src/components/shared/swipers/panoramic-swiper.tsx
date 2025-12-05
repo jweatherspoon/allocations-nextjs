@@ -29,6 +29,7 @@ export function PanoramicSwiper({ cards }: { cards: React.ReactNode[] }) {
         spaceBetween={10}
         loop
         simulateTouch
+        touchRatio={1.5}
         effect='coverflow'
         coverflowEffect={{
           rotate: 30,

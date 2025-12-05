@@ -65,7 +65,8 @@ export default async function PlansPage() {
       </div>
       <div className='space-y-4'>
         {completedPlans?.length ? (
-          <CardStackSwiper cards={completedPlanCards} direction='horizontal' />
+          // <CardStackSwiper cards={completedPlanCards} direction='horizontal' />
+          completedPlanCards
         ) : (
           <p className='text-dusk'>No completed plans found.</p>
         )}

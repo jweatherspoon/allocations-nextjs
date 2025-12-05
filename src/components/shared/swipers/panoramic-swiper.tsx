@@ -39,7 +39,7 @@ export function PanoramicSwiper({ cards }: { cards: React.ReactNode[] }) {
         }}
         freeMode={{
           enabled: true,
-          momentum: true,
+          momentum: false,
           sticky: true,
         }}
         centeredSlides

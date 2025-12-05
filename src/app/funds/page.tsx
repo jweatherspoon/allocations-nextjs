@@ -82,7 +82,8 @@ export default async function ListFundsPage() {
         </div>
       ) : (
         <div className='space-y-4'>
-          <CardStackSwiper cards={archivedFundCards} direction='horizontal' />
+          {/* <CardStackSwiper cards={archivedFundCards} direction='horizontal' /> */}
+          {archivedFundCards}
         </div>
       )}
       <BottomNav />

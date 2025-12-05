@@ -74,7 +74,7 @@ export default function FundTransactionDetailsSection({
         <div className='space-y-3 overflow-y'>
           {newTransactions.length > 0 ? (
             newTransactions
-              .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+              .sort((a, b) => b.modifiedAt.localeCompare(a.modifiedAt))
               .slice(0, 10)
               .map((transaction) => (
                 <div

@@ -13,6 +13,7 @@ import {
 import { Line } from 'react-chartjs-2';
 
 import { TransactionDetails } from '@/models/funds/transaction.model';
+import { formatCurrency, formatDate } from '@/utils/format.utils';
 
 Chart.register(
   LineElement,
@@ -88,7 +89,8 @@ export default function TransactionTrendChart({
 }) {
   // Sort transactions by date
   const sortedTransactions = [...transactions].sort(
-    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    (a, b) =>
+      new Date(a.modifiedAt).getTime() - new Date(b.modifiedAt).getTime()
   );
 
   // Calculate cumulative balance over time
@@ -108,12 +110,7 @@ export default function TransactionTrendChart({
   }, []);
 
   // Create labels from transaction dates
-  const labels = sortedTransactions.map((tx) =>
-    new Date(tx.createdAt).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-    })
-  );
+  const labels = sortedTransactions.map((tx) => formatDate(tx.modifiedAt));
 
   // Create options with access to transaction data
   const chartOptions: ChartOptions<'line'> = {
@@ -126,11 +123,7 @@ export default function TransactionTrendChart({
           title: (context) => {
             const index = context[0].dataIndex;
             const tx = sortedTransactions[index];
-            return new Date(tx.createdAt).toLocaleDateString('en-US', {
-              month: 'short',
-              day: 'numeric',
-              year: 'numeric',
-            });
+            return formatDate(tx.modifiedAt);
           },
           label: (context) => {
             const index = context.dataIndex;
@@ -145,15 +138,9 @@ export default function TransactionTrendChart({
               tx.status.charAt(0).toUpperCase() + tx.status.slice(1);
 
             return [
-              `${typeLabel}: $${tx.value.toLocaleString('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}`,
+              `${typeLabel}: ${formatCurrency(tx.value)}`,
               `Status: ${statusLabel}`,
-              `Balance: $${balance.toLocaleString('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}`,
+              `Balance: ${formatCurrency(balance)}`,
             ];
           },
           afterLabel: (context) => {

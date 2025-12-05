@@ -14,7 +14,7 @@
     "@azure/identity": "^4.13.0",
     "chart.js": "^4.5.1",
     "jose": "^6.1.0",
-    "next": "16.0.0",
+    "next": "^16.0.7",
     "react": "19.2.0",
     "react-chartjs-2": "^5.3.1",
     "react-dom": "19.2.0",
@@ -34,7 +34,7 @@
   },
   "overrides": {
     "@auth0/nextjs-auth0": {
-      "next": "16.0.0"
+      "next": "16.0.7"
     }
   }
 }

@@ -1,3 +1,7 @@
+> **Status: complete.** Phases 0-2 are done and merged to `main`: the app is fully on the Pace v2 design,
+> legacy UI and unused dependencies are removed, and end-to-end QA (dark + light, 390x844) passed.
+> Reference screenshots are in `docs/screenshots/`. This document is kept as a record.
+
 # Pace v2 redesign — parallel migration plan
 
 Source design: `docs/design/pace-v2.dc.html` (copy of "Concept C v2 - Pace" from the

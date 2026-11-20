@@ -224,14 +224,14 @@ export function FundScreen({ fundId }: { fundId: string }) {
         <button
           type='button'
           onClick={() => open({ kind: 'quick', mode: 'deposit', fundId })}
-          className='h-14 flex-1 rounded-[18px] bg-accent text-base font-semibold text-on-accent shadow-[0_10px_24px_rgba(0,0,0,.15)] active:scale-[.97]'
+          className='h-14 flex-1 rounded-[18px] bg-accent text-center text-base font-semibold text-on-accent shadow-[0_10px_24px_rgba(0,0,0,.15)] active:scale-[.97]'
         >
           Deposit
         </button>
         <button
           type='button'
           onClick={() => open({ kind: 'quick', mode: 'withdraw', fundId })}
-          className='h-14 flex-1 rounded-[18px] border border-line bg-surface text-base font-semibold active:scale-[.97]'
+          className='h-14 flex-1 rounded-[18px] border border-line bg-surface text-center text-base font-semibold active:scale-[.97]'
         >
           Withdraw
         </button>

@@ -9,18 +9,16 @@ const PortfolioContext = createContext<Portfolio | null>(null);
 
 export function PortfolioProvider({
   funds,
+  now,
   children,
 }: {
   funds: FundDetails[];
+  /** Server-sampled timestamp (ms); identical on the server and client render. */
+  now: number;
   children: React.ReactNode;
 }) {
   // Rebuilt whenever the server re-renders the layout with fresh funds (after a server action).
-  const portfolio = useMemo(
-    // "Now" is intentionally sampled whenever `funds` changes.
-    // eslint-disable-next-line react-hooks/purity
-    () => buildPortfolio(funds, Date.now()),
-    [funds]
-  );
+  const portfolio = useMemo(() => buildPortfolio(funds, now), [funds, now]);
 
   return (
     <PortfolioContext.Provider value={portfolio}>

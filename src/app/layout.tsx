@@ -2,6 +2,8 @@ import './globals.css';
 import { IBM_Plex_Mono, IBM_Plex_Sans, Instrument_Serif } from 'next/font/google';
 import { cookies } from 'next/headers';
 
+import { THEME_COLORS } from '@/lib/pace/colors';
+
 import type { Metadata, Viewport } from 'next';
 
 const plexSans = IBM_Plex_Sans({
@@ -35,7 +37,7 @@ async function readTheme(): Promise<'dark' | 'light'> {
 export async function generateViewport(): Promise<Viewport> {
   const theme = await readTheme();
   return {
-    themeColor: theme === 'light' ? '#f4f3f0' : '#09090b',
+    themeColor: THEME_COLORS[theme],
     viewportFit: 'cover',
   };
 }

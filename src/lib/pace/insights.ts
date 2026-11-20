@@ -18,14 +18,10 @@ export function monthBuckets(
 ): MonthBucket[] {
   const out: MonthBucket[] = [];
   for (let i = count - 1; i >= 0; i--) {
-    const d = new Date(now);
-    d.setDate(1);
-    d.setHours(0, 0, 0, 0);
-    d.setMonth(d.getMonth() - i);
-    const a = d.getTime();
-    const e = new Date(d);
-    e.setMonth(e.getMonth() + 1);
-    const end = e.getTime();
+    const n = new Date(now);
+    const a = Date.UTC(n.getUTCFullYear(), n.getUTCMonth() - i, 1);
+    const d = new Date(a);
+    const end = Date.UTC(n.getUTCFullYear(), n.getUTCMonth() - i + 1, 1);
     const value = active.reduce(
       (sum, f) =>
         sum +
@@ -35,7 +31,8 @@ export function monthBuckets(
       0
     );
     out.push({
-      label: d.toLocaleDateString('en-US', { month: 'short' }).toUpperCase(),
+      label: d
+        .toLocaleDateString('en-US', { month: 'short', timeZone: 'UTC' }).toUpperCase(),
       value,
       current: i === 0,
     });

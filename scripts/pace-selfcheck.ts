@@ -1,9 +1,9 @@
 /**
  * Self-check for the pure pace maths.
  *
- *   npx tsx scripts/pace-selfcheck.ts
+ *   npm run selfcheck
  *
- * (`tsx` is fetched by npx on first use.) Builds the demo data for several different
+ * Builds the demo data for several different
  * "today" dates, runs `buildPortfolio` on it and asserts a few invariants.
  * Exits non-zero on the first failure.
  */
@@ -36,10 +36,10 @@ assert.equal(statusColor('On track'), 'var(--accent)');
 
 // portfolio over a spread of dates (start, middle, end of month, new year)
 const dates = [
-  new Date(2026, 10, 20, 12),
-  new Date(2026, 0, 1, 0, 5),
-  new Date(2026, 1, 28, 23, 30),
-  new Date(2027, 5, 15, 9),
+  new Date(Date.UTC(2026, 10, 20, 12)),
+  new Date(Date.UTC(2026, 0, 1, 0, 5)),
+  new Date(Date.UTC(2026, 1, 28, 23, 30)),
+  new Date(Date.UTC(2027, 5, 15, 9)),
   new Date(),
 ];
 
@@ -98,6 +98,12 @@ for (const d of dates) {
     prev = s.offset;
   }
   assert.ok(p.ring.coveredCount <= p.ring.goalCount);
+  assert.equal(p.ring.items.length, p.ring.goalCount);
+  assert.equal(p.ring.items.filter((i) => i.covered).length, p.ring.coveredCount);
+  for (const i of p.ring.items) {
+    assert.equal(i.covered, i.saved >= i.need * 0.999);
+    assert.equal(i.shortfall > 0, i.fundId in p.ring.gapAllocations);
+  }
   for (const [id, amt] of Object.entries(p.ring.gapAllocations)) {
     assert.ok(funds.some((f) => f.id === id) && Number.isInteger(amt) && amt > 0);
   }

@@ -31,7 +31,7 @@ export function NewFundPanel({ onClose }: PanelProps<'new'>) {
   const ok = name.trim().length >= 3 && (!isGoal || nt > 0);
 
   const deadline = new Date(portfolio.now);
-  deadline.setMonth(deadline.getMonth() + months);
+  deadline.setUTCMonth(deadline.getUTCMonth() + months);
 
   // Net saved across active funds over the last 90 days, per month.
   const since = portfolio.now - 90 * DAY_MS;
@@ -61,7 +61,7 @@ export function NewFundPanel({ onClose }: PanelProps<'new'>) {
         name: trimmed,
         targetAmount: isGoal ? nt : undefined,
         targetDate: isGoal
-          ? `${deadline.getFullYear()}-${pad(deadline.getMonth() + 1)}-${pad(deadline.getDate())}`
+          ? `${deadline.getUTCFullYear()}-${pad(deadline.getUTCMonth() + 1)}-${pad(deadline.getUTCDate())}`
           : undefined,
       });
       if (!res.ok) {

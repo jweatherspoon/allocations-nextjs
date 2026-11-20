@@ -6,6 +6,10 @@ import { DEMO_MODE } from '@/api/demo/demo-mode';
 export async function proxy(request: NextRequest) {
   // Demo mode (dev only, see demo-mode.ts): no Auth0, no redirect.
   if (DEMO_MODE) {
+    // There is no Auth0 route handler here, so "sign out" just returns home.
+    if (request.nextUrl.pathname.startsWith('/auth/')) {
+      return NextResponse.redirect(new URL('/', request.nextUrl.origin));
+    }
     return NextResponse.next();
   }
 

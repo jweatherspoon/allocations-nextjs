@@ -32,12 +32,14 @@ function ShellBody({ children }: { children: React.ReactNode }) {
 /** Client shell: providers + page container + bottom nav + panel sheet + toasts. */
 export function AppShell({
   funds,
+  now,
   user,
   initialTheme = 'dark',
   initialHideBalances = false,
   children,
 }: {
   funds: FundDetails[];
+  now: number;
   user: AppUser;
   initialTheme?: Theme;
   initialHideBalances?: boolean;
@@ -49,7 +51,7 @@ export function AppShell({
       initialHideBalances={initialHideBalances}
     >
       <UserProvider user={user}>
-        <PortfolioProvider funds={funds}>
+        <PortfolioProvider funds={funds} now={now}>
           <ToastProvider>
             <PanelProvider>
               <ShellBody>{children}</ShellBody>

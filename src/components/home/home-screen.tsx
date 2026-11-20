@@ -10,14 +10,15 @@ import { fundColor, statusColor } from '@/lib/pace/colors';
 import { money } from '@/lib/pace/format';
 import { RING_CIRCUMFERENCE, type FundView } from '@/lib/pace/pace';
 
-/** Round so server and client renders agree despite a differing `now`. */
-const r1 = (n: number) => Math.round(n * 10) / 10;
-
 const LABEL = 'font-mono text-[10.5px] tracking-[.1em] text-muted';
 
 function dayLabel(t: number): string {
   return new Date(t)
-    .toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+    .toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      timeZone: 'UTC',
+    })
     .toUpperCase();
 }
 
@@ -30,6 +31,7 @@ export function HomeScreen() {
   const col = (hue: number) => fundColor(hue, theme);
   const { ring } = p;
   const byId = new Map(p.active.map((f) => [f.id, f]));
+  const itemById = new Map(ring.items.map((i) => [i.fundId, i]));
   const hasGap = ring.gap > 0;
   const gapSum = Object.values(ring.gapAllocations).reduce((a, b) => a + b, 0);
   const dayWord = p.daysLeft === 1 ? 'day' : 'days';
@@ -116,16 +118,16 @@ export function HomeScreen() {
                     r='100'
                     stroke={c}
                     opacity={0.2}
-                    strokeDasharray={`${r1(s.trackLen)} ${r1(RING_CIRCUMFERENCE)}`}
-                    strokeDashoffset={r1(s.offset)}
+                    strokeDasharray={`${s.trackLen} ${RING_CIRCUMFERENCE}`}
+                    strokeDashoffset={s.offset}
                   />
                   <circle
                     cx='114'
                     cy='114'
                     r='100'
                     stroke={c}
-                    strokeDasharray={`${r1(s.fillLen)} ${r1(RING_CIRCUMFERENCE)}`}
-                    strokeDashoffset={r1(s.offset)}
+                    strokeDasharray={`${s.fillLen} ${RING_CIRCUMFERENCE}`}
+                    strokeDashoffset={s.offset}
                     style={{
                       transition:
                         'stroke-dasharray .9s cubic-bezier(.2,.8,.2,1)',
@@ -167,8 +169,9 @@ export function HomeScreen() {
         {legend.length > 0 && (
           <div className='relative mt-[18px] grid grid-cols-2 gap-1.5'>
             {legend.map((f) => {
+              const item = itemById.get(f.id);
               const short = ring.gapAllocations[f.id] ?? 0;
-              const ok = short <= 0;
+              const ok = item?.covered ?? true;
               return (
                 <Link
                   key={f.id}
@@ -236,7 +239,7 @@ export function HomeScreen() {
                   key={c.fundId}
                   className='h-full rounded-[3px] transition-[width] duration-[600ms]'
                   style={{
-                    width: `${r1(c.share * 100)}%`,
+                    width: `${c.share * 100}%`,
                     background: col(c.hue),
                   }}
                 />
@@ -317,13 +320,13 @@ export function HomeScreen() {
                   <div
                     className='absolute inset-y-0 left-0 rounded-sm transition-[width] duration-[600ms]'
                     style={{
-                      width: `${r1(Math.min(1, pace.pct) * 100)}%`,
+                      width: `${Math.min(1, pace.pct) * 100}%`,
                       background: col(g.hue),
                     }}
                   />
                   <div
                     className='absolute -top-1 -bottom-1 w-0.5 rounded-[1px] bg-ink'
-                    style={{ left: `${r1(Math.min(1, pace.expected) * 100)}%` }}
+                    style={{ left: `${Math.min(1, pace.expected) * 100}%` }}
                   />
                 </div>
               )}

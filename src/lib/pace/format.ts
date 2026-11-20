@@ -4,6 +4,11 @@ export const DAY_MS = 864e5;
 /** Average month length used by all pace maths (matches the design prototype). */
 export const MONTH_MS = 30.44 * DAY_MS;
 
+/** Current time in ms. A function (not inline `Date.now()`) so server components can sample it once. */
+export function currentTime(): number {
+  return Date.now();
+}
+
 /** "$1,234" / "$1,234.50" / "−$20". Pass `cents` to always show two decimals. */
 export function money(n: number, cents = false): string {
   return (
@@ -21,13 +26,14 @@ export function moneyAuto(n: number): string {
   return money(n, n % 1 !== 0);
 }
 
-/** "NOV 17, 2026" */
+/** "NOV 17, 2026" (UTC, so server and client agree) */
 export function formatDayUpper(t: number): string {
   return new Date(t)
     .toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
       year: 'numeric',
+      timeZone: 'UTC',
     })
     .toUpperCase();
 }
@@ -37,5 +43,6 @@ export function formatMonthYear(t: number): string {
   return new Date(t).toLocaleDateString('en-US', {
     month: 'short',
     year: 'numeric',
+    timeZone: 'UTC',
   });
 }

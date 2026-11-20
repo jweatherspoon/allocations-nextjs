@@ -63,6 +63,18 @@ export interface RingSegment {
   offset: number;
 }
 
+export interface RingItem {
+  fundId: string;
+  /** Net saved this month (>= 0). */
+  saved: number;
+  /** Monthly need. */
+  need: number;
+  /** Amount still missing this month (>= 0). */
+  shortfall: number;
+  /** `saved >= need * 0.999`. */
+  covered: boolean;
+}
+
 export interface Portfolio {
   now: number;
   monthStart: number;
@@ -88,6 +100,8 @@ export interface Portfolio {
     goalCount: number;
     /** fundId → ceil(shortfall), only funds still short. */
     gapAllocations: Record<string, number>;
+    /** Per-goal progress this month (same order as `segments`). */
+    items: RingItem[];
   };
   /** Active funds with balance > 0. `share` is a fraction 0..1. */
   composition: { fundId: string; name: string; hue: number; share: number }[];
@@ -99,7 +113,7 @@ export const RING_CIRCUMFERENCE = 2 * Math.PI * 100;
 const RING_GAP = 5;
 
 export function parseTargetDate(s: string): number {
-  return Date.parse(s.length <= 10 ? `${s}T12:00:00` : s);
+  return Date.parse(s.length <= 10 ? `${s}T12:00:00Z` : s);
 }
 
 function toTxPoints(fund: FundDetails): TxPoint[] {
@@ -183,13 +197,19 @@ export function buildFundView(
 
 export function buildPortfolio(
   funds: FundDetails[],
-  now: number = Date.now()
+  now: number
 ): Portfolio {
+  // Month boundaries are computed in UTC so server and client always agree.
   const d = new Date(now);
-  const monthStart = new Date(d.getFullYear(), d.getMonth(), 1).getTime();
-  const daysInMonth = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
-  const daysLeft = Math.max(1, daysInMonth - d.getDate());
-  const monthName = d.toLocaleDateString('en-US', { month: 'long' });
+  const monthStart = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1);
+  const daysInMonth = new Date(
+    Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 0)
+  ).getUTCDate();
+  const daysLeft = Math.max(1, daysInMonth - d.getUTCDate());
+  const monthName = d.toLocaleDateString('en-US', {
+    month: 'long',
+    timeZone: 'UTC',
+  });
 
   const views = funds.map((f) => buildFundView(f, now, monthStart));
   const active = views.filter((v) => v.fund.status === 'active');
@@ -225,17 +245,21 @@ export function buildPortfolio(
   const saved = open.reduce((a, v) => a + Math.max(0, v.savedThisMonth), 0);
   const gapAllocations: Record<string, number> = {};
   let shortTotal = 0;
-  open.forEach((v) => {
-    const short = Math.max(
-      0,
-      (v.pace as FundPace).need - Math.max(0, v.savedThisMonth)
-    );
-    shortTotal += short;
-    if (short > 0) gapAllocations[v.id] = Math.ceil(short);
+  const items: RingItem[] = open.map((v) => {
+    const vn = (v.pace as FundPace).need;
+    const vs = Math.max(0, v.savedThisMonth);
+    const shortfall = Math.max(0, vn - vs);
+    shortTotal += shortfall;
+    if (shortfall > 0) gapAllocations[v.id] = Math.ceil(shortfall);
+    return {
+      fundId: v.id,
+      saved: vs,
+      need: vn,
+      shortfall,
+      covered: v.savedThisMonth >= vn * 0.999,
+    };
   });
-  const coveredCount = open.filter(
-    (v) => v.savedThisMonth >= (v.pace as FundPace).need * 0.999
-  ).length;
+  const coveredCount = items.filter((i) => i.covered).length;
 
   const composition = active
     .filter((v) => v.balance > 0)
@@ -268,6 +292,7 @@ export function buildPortfolio(
       coveredCount,
       goalCount: open.length,
       gapAllocations,
+      items,
     },
     composition,
     defaultQuickFundId: defaultQuick ? defaultQuick.id : null,

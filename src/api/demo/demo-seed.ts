@@ -14,7 +14,7 @@ import type { UserData } from '@/models/user/userData.model';
 export const DEMO_USER_ID = 'demo-user';
 
 const DAY = 864e5;
-const PROTO_TODAY = new Date('2026-11-20T12:00:00').getTime();
+const PROTO_TODAY = Date.parse('2026-11-20T12:00:00Z');
 const PROTO_DAY_OF_MONTH = 19.5;
 
 interface Def {
@@ -118,12 +118,12 @@ const DEFS: Def[] = [
 function isoDate(t: number): string {
   const d = new Date(t);
   const p = (n: number) => String(n).padStart(2, '0');
-  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+  return `${d.getUTCFullYear()}-${p(d.getUTCMonth() + 1)}-${p(d.getUTCDate())}`;
 }
 
 export function buildDemoUserData(now: number = Date.now()): UserData {
   const d = new Date(now);
-  const monthStart = new Date(d.getFullYear(), d.getMonth(), 1).getTime();
+  const monthStart = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1);
   const dayOfMonth = (now - monthStart) / DAY;
 
   const mapAgo = (ago: number) =>
@@ -195,7 +195,7 @@ export function buildDemoUserData(now: number = Date.now()): UserData {
         ? {
             targetAmount: def.targetAmount,
             targetDate: isoDate(
-              now + (Date.parse(`${def.targetDate}T12:00:00`) - PROTO_TODAY)
+              now + (Date.parse(`${def.targetDate}T12:00:00Z`) - PROTO_TODAY)
             ),
           }
         : {}),

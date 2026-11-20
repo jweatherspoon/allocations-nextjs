@@ -1,12 +1,17 @@
 /** Smart split: pure port of the prototype's `suggest(active, amount)`. */
 import type { FundView } from '@/lib/pace/pace';
 
+/** Matches the fund that acts as the safety net. */
+const SAFETY_NET = /emergency|safety|rainy/i;
+
 const roundDown5 = (x: number) => Math.floor(x / 5) * 5;
 
 /**
  * Suggests how to divide `amount` across the active funds.
  * - amount <= total monthly need: shared across unfunded goals in proportion to need.
- * - otherwise: every unfunded goal gets its need, the rest is spread over the pots.
+ * - otherwise: every unfunded goal gets its need, the rest is spread over the safety net
+ *   (an active fund named like emergency / safety / rainy) plus the pots; with no pots
+ *   and no safety net it lands on the first goal.
  * Everything is rounded down to $5; the remainder lands on the first unfunded goal
  * (or the first fund if there are none) so the total always equals `amount`.
  */
@@ -31,8 +36,10 @@ export function suggestSplit(
     });
     const rest = amount - goals.reduce((x, f) => x + alloc[f.id], 0);
     const pots = active.filter((f) => !f.pace);
-    pots.forEach((f) => {
-      alloc[f.id] = (alloc[f.id] || 0) + roundDown5(rest / pots.length);
+    const safety = active.find((f) => SAFETY_NET.test(f.name));
+    const targets = safety && !pots.includes(safety) ? [safety, ...pots] : pots;
+    targets.forEach((f) => {
+      alloc[f.id] = (alloc[f.id] || 0) + roundDown5(rest / targets.length);
     });
   }
 

@@ -34,3 +34,9 @@ export function statusColor(status: string): string {
       return 'var(--accent)';
   }
 }
+
+/** Browser-chrome colour per theme; mirrors `--bg` in globals.css. */
+export const THEME_COLORS: Record<Theme, string> = {
+  dark: '#09090b',
+  light: '#f4f3f0',
+};

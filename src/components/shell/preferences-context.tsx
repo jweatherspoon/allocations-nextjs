@@ -8,7 +8,7 @@ import {
   useState,
 } from 'react';
 
-import type { Theme } from '@/lib/pace/colors';
+import { THEME_COLORS, type Theme } from '@/lib/pace/colors';
 
 export const THEME_COOKIE = 'pace-theme';
 export const HIDE_COOKIE = 'pace-hide';
@@ -45,6 +45,10 @@ export function PreferencesProvider({
     setThemeState(next);
     writeCookie(THEME_COOKIE, next);
     document.documentElement.dataset.theme = next;
+    // Keep the browser chrome colour in step with the theme (mirrors `--bg`).
+    document
+      .querySelectorAll('meta[name="theme-color"]')
+      .forEach((m) => m.setAttribute('content', THEME_COLORS[next]));
   }, []);
 
   const toggleHideBalances = useCallback(() => {

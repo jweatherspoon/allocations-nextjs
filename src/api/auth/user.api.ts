@@ -2,11 +2,15 @@ import { SqlQuerySpec } from '@azure/cosmos';
 
 import { auth0 } from '@/api/auth/auth0.api';
 import { getDbContainer } from '@/api/db/db-context.api';
+import { DEMO_MODE } from '@/api/demo/demo-mode';
+import { getDemoUserData, setDemoUserData } from '@/api/demo/demo-store';
 import { FundDetails } from '@/models/funds/fund.model';
 import { PlanDetails } from '@/models/funds/plan.model';
 import { UserData } from '@/models/user/userData.model';
 
 export async function getUserData(): Promise<UserData | null> {
+  if (DEMO_MODE) return getDemoUserData();
+
   const session = await auth0.getSession();
   if (!session) {
     return null;
@@ -34,7 +38,6 @@ export async function upsertUserData(
   data: Partial<UserData>
 ): Promise<boolean> {
   const currentUser = await getUserData();
-  const container = await getDbContainer();
 
   try {
     if (currentUser) {
@@ -44,7 +47,7 @@ export async function upsertUserData(
         funds: reconcileFunds(currentUser.funds, data.funds),
         plans: reconcilePlans(currentUser.plans, data.plans),
       };
-      await container.item(currentUser.id, currentUser.id).replace(updatedUser);
+      await replaceUserData(updatedUser);
     } else {
       // Create new user
       if (!data.id) {
@@ -57,7 +60,12 @@ export async function upsertUserData(
         plans: data.plans || [],
       };
 
-      await container.items.create(newUser);
+      if (DEMO_MODE) {
+        setDemoUserData(newUser);
+      } else {
+        const container = await getDbContainer();
+        await container.items.create(newUser);
+      }
     }
 
     return true;
@@ -65,6 +73,32 @@ export async function upsertUserData(
     console.error('Error upserting user data:', error);
     return false;
   }
+}
+
+/** Removes a fund (and nothing else) from the user's document. */
+export async function removeUserFund(fundId: string): Promise<boolean> {
+  const currentUser = await getUserData();
+  if (!currentUser) return false;
+
+  try {
+    await replaceUserData({
+      ...currentUser,
+      funds: (currentUser.funds ?? []).filter((f) => f.id !== fundId),
+    });
+    return true;
+  } catch (error) {
+    console.error('Error removing fund:', error);
+    return false;
+  }
+}
+
+async function replaceUserData(user: UserData): Promise<void> {
+  if (DEMO_MODE) {
+    setDemoUserData(user);
+    return;
+  }
+  const container = await getDbContainer();
+  await container.item(user.id, user.id).replace(user);
 }
 
 function reconcileFunds(

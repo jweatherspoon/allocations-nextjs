@@ -17,4 +17,6 @@ export interface FundDetails {
   groupId?: string;
   targetDate?: string;
   targetAmount?: number;
+  /** Colour hue (0-360) assigned at creation; falls back to a hash of the id. */
+  hue?: number;
 }

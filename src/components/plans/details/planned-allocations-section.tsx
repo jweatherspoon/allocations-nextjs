@@ -3,12 +3,12 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+import { addAllocationToPlan, executePlan } from '@/api/plans/plans.api';
 import AddAllocationModal from '@/components/plans/details/add-allocation-modal';
 import AllocationDetailsCard from '@/components/plans/details/allocation-details-card';
 import Button from '@/components/shared/button/button';
 import DetailsSectionContainer from '@/components/shared/containers/sections/details-section-container';
 import { ProgressBar } from '@/components/shared/progress/progress-bar';
-import { addAllocationToPlan, executePlan } from '@/api/plans/plans.api';
 import { FundDetails } from '@/models/funds/fund.model';
 import { PlanDetails } from '@/models/funds/plan.model';
 

@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { auth0 } from '@/api/auth/auth0.api';
+import { DEMO_MODE } from '@/api/demo/demo-mode';
 
 export async function proxy(request: NextRequest) {
+  // Demo mode (dev only, see demo-mode.ts): no Auth0, no redirect.
+  if (DEMO_MODE) {
+    return NextResponse.next();
+  }
+
   const authRes = await auth0.middleware(request);
 
   if (request.nextUrl.pathname.startsWith('/auth')) {

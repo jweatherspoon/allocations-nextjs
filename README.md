@@ -66,7 +66,7 @@ the ledger and the smart-split suggestion. Run it after touching `src/lib/pace`.
 
 ```
 src/
-  app/               routes: (app)/ is the signed-in shell (home, funds/[fundId], insights),
+  app/               routes: (app)/ is the signed-in shell (home, funds/[fundId], month),
                      plus root layout, manifest and icons
   api/               server actions and data access
     funds/ plans/    fund + ledger writes, paycheck splits
@@ -74,8 +74,8 @@ src/
     demo/            in-memory demo mode
   components/
     shell/           providers (portfolio, preferences, panels, toasts), bottom nav, panel host
-    home/ fund/ insights/   the three screens
-    panels/          quick log, smart split, new fund, settings
+    home/ fund/ month/      the three screens (month = "This month" tab)
+    panels/          quick log, smart split, new fund, edit fund, settings
     ui/              shared primitives (keypad, segmented, toggle, buttons, icons)
   lib/pace/          pure maths and formatting: pace, split, projection, insights, colors
   models/            TypeScript types for funds, transactions, plans, users

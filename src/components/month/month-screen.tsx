@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 
+import { MonthRingCard } from '@/components/month/month-ring-card';
 import { usePortfolio } from '@/components/shell/portfolio-context';
 import { usePreferences } from '@/components/shell/preferences-context';
 import { money } from '@/lib/pace/format';
@@ -14,7 +15,18 @@ import {
 
 const LABEL = 'text-[13px] font-semibold uppercase tracking-[.06em] text-muted';
 
-export function InsightsScreen() {
+function dayLabel(t: number): string {
+  return new Date(t)
+    .toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      timeZone: 'UTC',
+    })
+    .toUpperCase();
+}
+
+/** "This month" tab: the goal ring, saved-vs-needed history and the goal timeline. */
+export function MonthScreen() {
   const pf = usePortfolio();
   const { mask } = usePreferences();
 
@@ -26,9 +38,15 @@ export function InsightsScreen() {
 
   return (
     <main className='px-[18px] pt-[62px] pb-32'>
-      <h1 className='mx-1 mb-4 font-serif text-[40px] leading-none tracking-[-.01em]'>
-        Insights
-      </h1>
+      <div className='mx-1 mb-[18px]'>
+        <h1 className='font-serif text-[36px] leading-none font-normal tracking-[-.01em]'>
+          {pf.monthName}
+        </h1>
+        <p className='mt-1.5 font-mono text-[11px] tracking-[.08em] text-muted'>
+          {dayLabel(pf.now)} · {pf.daysLeft}{' '}
+          {pf.daysLeft === 1 ? 'DAY' : 'DAYS'} LEFT
+        </p>
+      </div>
 
       {pf.active.length === 0 ? (
         <p className='mx-1 text-muted'>
@@ -36,7 +54,9 @@ export function InsightsScreen() {
         </p>
       ) : (
         <>
-          <section className='rounded-3xl border border-line bg-surface p-[18px]'>
+          <MonthRingCard />
+
+          <section className='mt-6 rounded-3xl border border-line bg-surface p-[18px]'>
             <div className='flex items-baseline justify-between'>
               <h2 className={LABEL}>Saved vs. needed</h2>
               <span className='font-mono text-xs text-muted'>

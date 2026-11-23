@@ -7,7 +7,7 @@ import { usePanels } from '@/components/shell/panel-context';
 import { usePortfolio } from '@/components/shell/portfolio-context';
 import { PlusIcon } from '@/components/ui/icons';
 
-/** Plan · ＋ Log money · Insights. Hidden on fund detail pages. */
+/** Plan · ＋ Log money · This month. Hidden on fund detail pages. */
 export function BottomNav() {
   const pathname = usePathname();
   const { open } = usePanels();
@@ -21,7 +21,7 @@ export function BottomNav() {
       <Link
         href={href}
         aria-current={active ? 'page' : undefined}
-        className={`grid h-12 w-20 place-items-center text-center text-[13px] font-semibold ${
+        className={`grid h-12 w-24 place-items-center text-center text-[13px] font-semibold ${
           active ? 'text-accent' : 'text-muted'
         }`}
       >
@@ -47,7 +47,7 @@ export function BottomNav() {
         >
           <PlusIcon width={26} height={26} />
         </button>
-        {tab('/insights', 'Insights')}
+        {tab('/month', 'This month')}
       </div>
     </nav>
   );

@@ -223,18 +223,39 @@ export function HomeScreen() {
       )}
 
       {p.archived.length > 0 && (
-        <div className='mt-2'>
-          {p.archived.map((g) => (
-            <Link
-              key={g.id}
-              href={`/funds/${g.id}`}
-              className='flex w-full justify-between px-1 py-3 text-[13px] text-muted'
+        <details className='group mt-6'>
+          <summary className='mx-1 flex cursor-pointer list-none items-center justify-between py-2 [&::-webkit-details-marker]:hidden'>
+            <span className={LABEL}>ARCHIVED · {p.archived.length}</span>
+            <svg
+              aria-hidden
+              width='12'
+              height='12'
+              viewBox='0 0 12 12'
+              fill='none'
+              className='text-muted transition-transform duration-200 group-open:rotate-180'
             >
-              <span>Archived · {g.name}</span>
-              <span className='font-mono'>{mask(money(g.balance))}</span>
-            </Link>
-          ))}
-        </div>
+              <path
+                d='M2.5 4.5 6 8l3.5-3.5'
+                stroke='currentColor'
+                strokeWidth='1.6'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+              />
+            </svg>
+          </summary>
+          <div className='mt-1'>
+            {p.archived.map((g) => (
+              <Link
+                key={g.id}
+                href={`/funds/${g.id}`}
+                className='flex w-full justify-between px-1 py-3 text-[13px] text-muted'
+              >
+                <span>{g.name}</span>
+                <span className='font-mono'>{mask(money(g.balance))}</span>
+              </Link>
+            ))}
+          </div>
+        </details>
       )}
     </main>
   );

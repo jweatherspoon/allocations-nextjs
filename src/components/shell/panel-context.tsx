@@ -19,6 +19,7 @@ export type PanelRequest =
       gapMode?: boolean;
     }
   | { kind: 'new' }
+  | { kind: 'edit'; fundId: string }
   | { kind: 'settings' };
 
 export type PanelKind = PanelRequest['kind'];

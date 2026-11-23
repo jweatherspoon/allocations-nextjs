@@ -16,6 +16,7 @@ import type {
   CreateFundInput,
   LogEntry,
   TxRef,
+  UpdateFundInput,
 } from '@/models/funds/actions.model';
 import { FundDetails, FundStatus } from '@/models/funds/fund.model';
 
@@ -155,4 +156,55 @@ export async function setFundStatus(
   const ok = await upsertUserData({ id: user.id, funds: [fund] });
   if (ok) revalidateApp();
   return ok;
+}
+
+/**
+ * Edits a fund's name, description, target amount and deadline. `null` removes the
+ * target or deadline (a fund without both becomes a pot). Returns the previous values
+ * so the caller can offer Undo by calling `updateFund` with them.
+ */
+export async function updateFund(
+  fundId: string,
+  input: UpdateFundInput
+): Promise<{ ok: boolean; previous: UpdateFundInput | null }> {
+  const failure = { ok: false, previous: null };
+
+  const name = input.name?.trim();
+  if (!name || name.length > 40) return failure;
+
+  const target = input.targetAmount;
+  if (target !== null && !(Number.isFinite(target) && target > 0)) {
+    return failure;
+  }
+
+  const date = input.targetDate;
+  if (
+    date !== null &&
+    (typeof date !== 'string' || Number.isNaN(Date.parse(date)))
+  ) {
+    return failure;
+  }
+
+  const user = await getUserData();
+  const fund = user?.funds?.find((f) => f.id === fundId);
+  if (!user || !fund) return failure;
+
+  const previous: UpdateFundInput = {
+    name: fund.name,
+    description: fund.description ?? '',
+    targetAmount: fund.targetAmount ?? null,
+    targetDate: fund.targetDate ?? null,
+  };
+
+  fund.name = name;
+  fund.description = (input.description ?? '').trim().slice(0, 120);
+  if (target === null) delete fund.targetAmount;
+  else fund.targetAmount = Math.round(target * 100) / 100;
+  if (date === null) delete fund.targetDate;
+  else fund.targetDate = date;
+  fund.modifiedAt = new Date().toISOString();
+
+  const ok = await upsertUserData({ id: user.id, funds: [fund] });
+  if (ok) revalidateApp();
+  return ok ? { ok, previous } : failure;
 }

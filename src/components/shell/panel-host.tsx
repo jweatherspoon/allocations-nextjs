@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 
+import { EditFundPanel } from '@/components/panels/edit-fund-panel';
 import { NewFundPanel } from '@/components/panels/new-fund-panel';
 import { QuickLogPanel } from '@/components/panels/quick-log-panel';
 import { SettingsPanel } from '@/components/panels/settings-panel';
@@ -16,6 +17,7 @@ const LABELS: Record<PanelKind, string> = {
   quick: 'Log money',
   split: 'Smart split',
   new: 'New fund',
+  edit: 'Edit fund',
   settings: 'Settings',
 };
 
@@ -30,6 +32,8 @@ function renderPanel(request: PanelRequest, onClose: () => void) {
       return <SmartSplitPanel request={request} onClose={onClose} />;
     case 'new':
       return <NewFundPanel request={request} onClose={onClose} />;
+    case 'edit':
+      return <EditFundPanel request={request} onClose={onClose} />;
     case 'settings':
       return <SettingsPanel request={request} onClose={onClose} />;
   }

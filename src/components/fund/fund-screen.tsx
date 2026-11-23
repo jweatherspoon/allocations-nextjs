@@ -79,14 +79,23 @@ export function FundScreen({ fundId }: { fundId: string }) {
         >
           <BackIcon width={18} height={18} />
         </Link>
-        <button
-          type='button'
-          onClick={toggleArchive}
-          disabled={pending}
-          className='h-9 rounded-full bg-chip px-3.5 text-[13px] font-semibold disabled:opacity-50'
-        >
-          {isActive ? 'Archive' : 'Restore'}
-        </button>
+        <div className='flex gap-2'>
+          <button
+            type='button'
+            onClick={() => open({ kind: 'edit', fundId })}
+            className='h-9 rounded-full bg-chip px-3.5 text-[13px] font-semibold'
+          >
+            Edit
+          </button>
+          <button
+            type='button'
+            onClick={toggleArchive}
+            disabled={pending}
+            className='h-9 rounded-full bg-chip px-3.5 text-[13px] font-semibold disabled:opacity-50'
+          >
+            {isActive ? 'Archive' : 'Restore'}
+          </button>
+        </div>
       </div>
 
       <div className='px-1'>
@@ -116,7 +125,7 @@ export function FundScreen({ fundId }: { fundId: string }) {
 
       <div className='mt-[18px] rounded-[22px] border border-line bg-surface pt-4 pb-2.5'>
         <div className='px-4 pb-2.5 text-sm leading-[1.4] text-pretty'>
-          {projectionSentence(view, proj, mask)}
+          {projectionSentence(view, proj, mask, portfolio.now)}
         </div>
         <svg
           viewBox={`0 0 ${CHART_W} ${CHART_H}`}

@@ -352,8 +352,15 @@ export function HomeScreen() {
                   />
                   {g.name}
                 </span>
-                <span className='font-serif text-[24px]'>
-                  {mask(money(g.balance))}
+                <span className='flex items-baseline gap-1.5'>
+                  <span className='font-serif text-[24px]'>
+                    {mask(money(g.balance))}
+                  </span>
+                  {g.fund.targetAmount ? (
+                    <span className='font-mono text-[11px] text-muted'>
+                      / {mask(money(g.fund.targetAmount))}
+                    </span>
+                  ) : null}
                 </span>
               </Link>
             ))}

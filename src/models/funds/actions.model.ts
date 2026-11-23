@@ -20,3 +20,15 @@ export type CreateFundInput = {
   /** `YYYY-MM-DD` */
   targetDate?: string;
 };
+
+/**
+ * Editable fund properties. `null` removes a target or deadline.
+ * A fund is a goal only when it has both; otherwise it is a pot.
+ */
+export type UpdateFundInput = {
+  name: string;
+  description: string;
+  targetAmount: number | null;
+  /** `YYYY-MM-DD` */
+  targetDate: string | null;
+};

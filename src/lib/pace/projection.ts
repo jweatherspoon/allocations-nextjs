@@ -102,9 +102,24 @@ export function buildFundProjection(
 export function projectionSentence(
   view: FundView,
   proj: FundProjection,
-  fmt: (s: string) => string = (s) => s
+  fmt: (s: string) => string,
+  now: number
 ): string {
   const p = view.pace;
+  const target = view.fund.targetAmount;
+  if (!p && target) {
+    // A pot with a target but no deadline: no monthly pace, but say when it gets there.
+    if (view.balance >= target)
+      return 'Target reached. Archive it, or keep it growing.';
+    if (proj.rate <= 0)
+      return `No recent deposits. Add one to see when you'll reach ${fmt(
+        money(target)
+      )}.`;
+    const finish = now + ((target - view.balance) / proj.rate) * MONTH_MS;
+    return `At ${fmt(money(proj.rate))}/mo you'll reach ${fmt(
+      money(target)
+    )} around ${formatMonthYear(finish)}. Add a deadline to track pace.`;
+  }
   if (!p) {
     return `Growing about ${fmt(money(proj.rate))}/mo. At this pace: ${fmt(
       money(proj.projEnd)
